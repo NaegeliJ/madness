@@ -1,18 +1,13 @@
 summary 'CSS operations'
 
 help   'Generate public CSS'
-usage  'generate [--watch]'
-option '--watch, -w', 'Watch for changes and regenerate'
+usage  'generate'
 action :generate do |args|
   require 'sasstool'
 
-  if args['--watch']
-    exec "filewatcher --immediate 'app/styles/*.scss' 'bundle exec run css generate'"
-  else
-    target = "app/public/css"
-    Sasstool::Renderer.new("app/styles/main.scss").save target
-    puts "Saved #{target}"
-  end
+  target = "app/public/css"
+  Sasstool::Renderer.new("app/styles/main.scss").save target
+  puts "Saved #{target}"
 end
 
 help   "Generate rouge CSS"

@@ -2,11 +2,10 @@ source 'https://rubygems.org'
 
 group :development do
   gem 'debug'
-  gem 'filewatcher-cli', require: false
   gem 'lp'
   gem 'pretty_trace'
-  gem 'runfile', '>= 1.0', require: false
-  gem 'runfile-tasks', '>= 1.0', require: false
+  gem 'runfile', require: false
+  gem 'runfile-tasks', require: false
   gem 'sasstool', require: false
 end
 
