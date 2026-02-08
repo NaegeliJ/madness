@@ -2,7 +2,7 @@
 
 # Madness - Instant Markdown Server
 
-![repocard](repocard.svg)
+![repocard](https://repocard.dannyben.com/svg/madness.svg)
 
 Madness is a command line server for rendering markdown documents in your
 browser. It is designed to facilitate easy development of internal
