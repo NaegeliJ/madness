@@ -70,6 +70,12 @@
             "type": "boolean",
             "default": "true"
         },
+        "nav_tree": {
+            "title": "nav tree",
+            "description": "Render the sidebar as a recursive tree of the entire docroot with collapsible folders\nhttps://madness.dannyb.co/#configuration-file",
+            "type": "boolean",
+            "default": "true"
+        },
         "auto_h1": {
             "title": "auto h1",
             "description": "Whether to add H1 title to files that do not have one\nhttps://madness.dannyb.co/#configuration-file",

@@ -7,9 +7,10 @@ table {
   overflow: auto;
   word-break: normal;
   word-break: keep-all;
-  
+  font-size: 0.95em;
+
   th, td {
-    padding: 6px 13px;
+    padding: 8px 14px;
     border: 1px solid var(--table-border-color);
   }
 
@@ -18,16 +19,16 @@ table {
   }
 
   th {
-    font-weight: bold;
+    font-weight: 600;
+    text-align: left;
     background-color: var(--table-header-bg-color);
   }
-
 
   tr {
     background-color: var(--table-row-bg-color);
   }
 
-  tr:nth-child(2n) {
+  tr:nth-child(2n) td {
     background-color: var(--table-alt-row-bg-color);
   }
 }

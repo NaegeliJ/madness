@@ -64,6 +64,44 @@ describe Navigation do
     end
   end
 
+  describe '#tree?' do
+    it 'defaults to true' do
+      expect(subject.tree?).to be true
+    end
+
+    context 'when config.nav_tree is false' do
+      before { config.nav_tree = false }
+
+      it 'returns false' do
+        expect(subject.tree?).to be false
+      end
+    end
+  end
+
+  describe '#tree' do
+    before { config.nav_tree = true }
+
+    it 'returns the full docroot tree regardless of which dir was passed' do
+      subject = described_class.new "#{docroot}/Folder"
+      labels = subject.tree.map(&:label)
+
+      expect(labels).to include('Folder', 'XFile')
+    end
+
+    it 'attaches recursive children to folders' do
+      folder = subject.tree.find { |i| i.label == 'Folder' }
+
+      expect(folder.children.map(&:label)).to eq ['Nested']
+    end
+  end
+
+  describe '#current_path' do
+    it 'returns the dir the navigation was built for' do
+      subject = described_class.new "#{docroot}/Folder"
+      expect(subject.current_path).to eq "#{docroot}/Folder"
+    end
+  end
+
   describe '#caption' do
     context 'with docroot' do
       it "sets caption to 'Index'" do

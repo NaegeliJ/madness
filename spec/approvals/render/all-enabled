@@ -124,10 +124,10 @@ graph TD;
 
 <p>Or using the <code>mermaid</code> code block:</p>
 <div class='mermaid'>graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;
+    A--&gt;B;
+    A--&gt;C;
+    B--&gt;D;
+    C--&gt;D;
 </div>
 <h2 id="unsafe-html">Unsafe HTML</h2>
 

@@ -59,6 +59,7 @@ module Madness
         base_uri:          nil,
         sort_order:        'dirs_first',
         sidebar:           true,
+        nav_tree:          true,
         auto_h1:           true,
         auto_nav:          true,
         auto_toc:          true,

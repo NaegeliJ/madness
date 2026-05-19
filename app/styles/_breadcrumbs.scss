@@ -1,9 +1,16 @@
 .breadcrumbs {
   margin-top: 6px;
   border-bottom: 1px solid var(--breadcrumbs-border-color);
+  font-size: 0.9em;
+  color: var(--quiet-color);
 
   a {
     display: inline-block;
-    padding: 7px 0;
+    padding: 8px 0;
+    color: var(--quiet-color);
+
+    &:hover {
+      color: var(--link-color);
+    }
   }
 }

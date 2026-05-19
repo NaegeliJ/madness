@@ -12,6 +12,7 @@
 - tmp/theme-test/public/font/fontello.woff2
 - tmp/theme-test/public/js
 - tmp/theme-test/public/js/clipboard.js
+- tmp/theme-test/public/js/theme.js
 - tmp/theme-test/public/js/vendor
 - tmp/theme-test/public/js/vendor/clipboard.min.js
 - tmp/theme-test/public/js/vendor/jquery.min.js
@@ -44,6 +45,7 @@
 - tmp/theme-test/views/_index_nav.slim
 - tmp/theme-test/views/_mobile_search.slim
 - tmp/theme-test/views/_nav.slim
+- tmp/theme-test/views/_nav_tree.slim
 - tmp/theme-test/views/document.slim
 - tmp/theme-test/views/layout.slim
 - tmp/theme-test/views/search.slim

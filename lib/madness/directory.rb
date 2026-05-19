@@ -16,6 +16,13 @@ module Madness
       @list ||= (dirs + files)
     end
 
+    def tree
+      @tree ||= list.map do |item|
+        item.children = self.class.new(item.path).tree if item.dir?
+        item
+      end
+    end
+
   private
 
     def files
