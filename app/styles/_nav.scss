@@ -16,8 +16,6 @@ nav {
   overflow-y: auto;
   position: fixed;
   font-size: 14px;
-  transition: background-color 200ms ease, border-color 200ms ease;
-
   .icon-bar {
     background: var(--sidebar-bg-color);
     border-bottom: 1px solid var(--sidebar-border-color);
@@ -27,7 +25,6 @@ nav {
     display: flex;
     align-items: center;
     padding: 4px 8px;
-    transition: background-color 200ms ease, border-color 200ms ease;
   }
 
   a.document, span.document, .caption {
@@ -36,7 +33,6 @@ nav {
     padding: 8px 20px 8px 26px;
     color: var(--font-color);
     border-left: 3px solid transparent;
-    transition: background-color 120ms ease, color 120ms ease, border-left-color 120ms ease;
   }
 
   a.document:hover {
@@ -67,8 +63,6 @@ nav {
     height: 40px;
     border-radius: 6px;
     color: var(--font-color);
-    transition: background-color 120ms ease, color 120ms ease;
-
     &.wide {
       flex: 1;
     }
@@ -108,8 +102,6 @@ nav {
       align-items: center;
       padding: 0;
       border-bottom: 1px solid var(--sidebar-border-color);
-      transition: background-color 120ms ease;
-
       &::-webkit-details-marker { display: none; }
 
       &:hover {
@@ -123,7 +115,7 @@ nav {
         margin-left: 8px;
         position: relative;
         color: var(--quiet-color);
-        transition: transform 150ms ease, color 120ms ease;
+        transition: transform 150ms ease;
 
         &::before {
           content: "";
@@ -216,7 +208,7 @@ nav {
   border: 1px solid var(--sidebar-border-color);
   color: var(--font-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+  transition: transform 120ms ease;
 
   &:hover {
     background: var(--sidebar-hover-bg-color);

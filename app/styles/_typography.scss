@@ -1,7 +1,3 @@
-html {
-  transition: background-color 200ms ease, color 200ms ease;
-}
-
 body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -13,7 +9,6 @@ body {
   line-height: 1.7;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   word-wrap: break-word;
-  transition: background-color 200ms ease, color 200ms ease;
 }
 
 ::selection {

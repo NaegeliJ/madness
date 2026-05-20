@@ -226,8 +226,7 @@
 
 a {
   color: var(--link-color);
-  text-decoration: none;
-  transition: color 120ms ease; }
+  text-decoration: none; }
   a:hover {
     color: var(--link-hover-color);
     text-decoration: underline;
@@ -450,8 +449,7 @@ nav {
   width: 300px;
   overflow-y: auto;
   position: fixed;
-  font-size: 14px;
-  transition: background-color 200ms ease, border-color 200ms ease; }
+  font-size: 14px; }
   @media print {
     nav {
       display: none; } }
@@ -466,15 +464,13 @@ nav {
     z-index: 1;
     display: flex;
     align-items: center;
-    padding: 4px 8px;
-    transition: background-color 200ms ease, border-color 200ms ease; }
+    padding: 4px 8px; }
   nav a.document, nav span.document, nav .caption {
     border-bottom: 1px solid var(--sidebar-border-color);
     display: block;
     padding: 8px 20px 8px 26px;
     color: var(--font-color);
-    border-left: 3px solid transparent;
-    transition: background-color 120ms ease, color 120ms ease, border-left-color 120ms ease; }
+    border-left: 3px solid transparent; }
   nav a.document:hover {
     background: var(--sidebar-hover-bg-color);
     color: var(--link-color);
@@ -496,8 +492,7 @@ nav {
     width: 44px;
     height: 40px;
     border-radius: 6px;
-    color: var(--font-color);
-    transition: background-color 120ms ease, color 120ms ease; }
+    color: var(--font-color); }
     nav a.icon.wide {
       flex: 1; }
     nav a.icon:hover {
@@ -523,8 +518,7 @@ nav {
     display: flex;
     align-items: center;
     padding: 0;
-    border-bottom: 1px solid var(--sidebar-border-color);
-    transition: background-color 120ms ease; }
+    border-bottom: 1px solid var(--sidebar-border-color); }
     nav details.tree-folder > summary.tree-summary::-webkit-details-marker {
       display: none; }
     nav details.tree-folder > summary.tree-summary:hover {
@@ -536,7 +530,7 @@ nav {
       margin-left: 8px;
       position: relative;
       color: var(--quiet-color);
-      transition: transform 150ms ease, color 120ms ease; }
+      transition: transform 150ms ease; }
       nav details.tree-folder > summary.tree-summary .tree-chevron::before {
         content: "";
         position: absolute;
@@ -598,7 +592,7 @@ nav {
   border: 1px solid var(--sidebar-border-color);
   color: var(--font-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease; }
+  transition: transform 120ms ease; }
   .floating-theme-toggle:hover {
     background: var(--sidebar-hover-bg-color);
     transform: translateY(-1px); }
@@ -959,7 +953,7 @@ code span.wa {
   font-family: var(--font-family);
   width: 100%;
   min-width: 200px;
-  transition: border-color 120ms ease, box-shadow 120ms ease, background-color 200ms ease; }
+  transition: box-shadow 120ms ease; }
   .search-field::placeholder {
     color: var(--quiet-color); }
   .search-field:focus {
@@ -995,9 +989,6 @@ table {
   table tr:nth-child(2n) td {
     background-color: var(--table-alt-row-bg-color); }
 
-html {
-  transition: background-color 200ms ease, color 200ms ease; }
-
 body {
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -1008,8 +999,7 @@ body {
   font-size: 16px;
   line-height: 1.7;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  word-wrap: break-word;
-  transition: background-color 200ms ease, color 200ms ease; }
+  word-wrap: break-word; }
 
 ::selection {
   background-color: var(--selection-bg-color);
