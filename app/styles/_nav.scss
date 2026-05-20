@@ -72,7 +72,7 @@ nav {
       color: var(--link-color);
     }
 
-    svg {
+    .icon-svg {
       width: 18px;
       height: 18px;
       stroke: currentColor;
@@ -81,6 +81,7 @@ nav {
       stroke-linecap: round;
       stroke-linejoin: round;
     }
+
   }
 
   .icon-spacer {
@@ -215,7 +216,7 @@ nav {
     transform: translateY(-1px);
   }
 
-  svg {
+  .icon-svg {
     width: 18px;
     height: 18px;
     stroke: currentColor;

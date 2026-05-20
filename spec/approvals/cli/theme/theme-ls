@@ -4,12 +4,6 @@
 - tmp/theme-test/public/css/main.css
 - tmp/theme-test/public/css/main.css.map
 - tmp/theme-test/public/favicon.ico
-- tmp/theme-test/public/font
-- tmp/theme-test/public/font/fontello.eot
-- tmp/theme-test/public/font/fontello.svg
-- tmp/theme-test/public/font/fontello.ttf
-- tmp/theme-test/public/font/fontello.woff
-- tmp/theme-test/public/font/fontello.woff2
 - tmp/theme-test/public/js
 - tmp/theme-test/public/js/clipboard.js
 - tmp/theme-test/public/js/theme.js
@@ -21,7 +15,6 @@
 - tmp/theme-test/styles/_anchor.scss
 - tmp/theme-test/styles/_breadcrumbs.scss
 - tmp/theme-test/styles/_code.scss
-- tmp/theme-test/styles/_fontello.scss
 - tmp/theme-test/styles/_footnotes.scss
 - tmp/theme-test/styles/_general.scss
 - tmp/theme-test/styles/_image.scss
@@ -42,6 +35,7 @@
 - tmp/theme-test/styles/main.scss
 - tmp/theme-test/views
 - tmp/theme-test/views/_breadcrumbs.slim
+- tmp/theme-test/views/_icon.slim
 - tmp/theme-test/views/_index_nav.slim
 - tmp/theme-test/views/_mobile_search.slim
 - tmp/theme-test/views/_nav.slim
