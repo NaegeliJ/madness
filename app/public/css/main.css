@@ -1,5 +1,4 @@
 @charset "UTF-8";
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
 :root {
   color-scheme: light dark;
   --background-color: #fdfdfd;
@@ -9,8 +8,8 @@
   --sidebar-hover-bg-color: #f0f0f0;
   --sidebar-active-bg-color: #eef3fb;
   --font-color: #1f2328;
-  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Helvetica, Arial, freesans, sans-serif;
-  --font-family-monospace: "JetBrains Mono", "SF Mono", "Cascadia Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-family-monospace: ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
   --quiet-color: #656d76;
   --footnotes-color: #656d76;
   --h1-color: #1f2328;

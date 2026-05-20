@@ -1,7 +1,3 @@
-// Self-host-free webfonts via Google Fonts. Falls back gracefully to the
-// system stack defined in `_variables.scss` if the network is offline.
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
-
 html {
   transition: background-color 200ms ease, color 200ms ease;
 }
