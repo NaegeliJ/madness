@@ -31,7 +31,7 @@ sidebar: true
 # render the sidebar as a recursive tree of the entire docroot, with
 # collapsible folders. when false, the sidebar shows only the current
 # folder's immediate children.
-nav_tree: true
+nav_tree: false
 
 # add H1 title to files that do not have one
 auto_h1: true

@@ -65,15 +65,15 @@ describe Navigation do
   end
 
   describe '#tree?' do
-    it 'defaults to true' do
-      expect(subject.tree?).to be true
+    it 'defaults to false' do
+      expect(subject.tree?).to be false
     end
 
-    context 'when config.nav_tree is false' do
-      before { config.nav_tree = false }
+    context 'when config.nav_tree is true' do
+      before { config.nav_tree = true }
 
-      it 'returns false' do
-        expect(subject.tree?).to be false
+      it 'returns true' do
+        expect(subject.tree?).to be true
       end
     end
   end

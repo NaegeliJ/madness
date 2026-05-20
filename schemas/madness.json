@@ -68,7 +68,7 @@
             "title": "sidebar",
             "description": "Whether to enable sidebar\nhttps://madness.dannyb.co/#configuration-file",
             "type": "boolean",
-            "default": "true"
+            "default": "false"
         },
         "nav_tree": {
             "title": "nav tree",
