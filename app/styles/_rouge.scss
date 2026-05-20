@@ -1,9 +1,6 @@
 // Rouge syntax highlighting.
 //
-// NOTE: previously regenerated via `bundle exec run css rouge`. Do not run
-// that task anymore — this file is now hand-tuned to use CSS variables, so
-// the same markup themes correctly under both light and dark palettes.
-// See `--rouge-*` tokens in `_variables.scss`.
+// Use `bundle exec run css rouge` to generate update reference CSS.
 
 .highlight {
   background: var(--rouge-bg);

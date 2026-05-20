@@ -10,13 +10,15 @@ action :generate do |args|
   puts "Saved #{target}"
 end
 
-help   "Generate rouge CSS"
+help   "Generate rouge CSS reference"
 action :rouge do
-  puts 'Saving app/styles/_rouge.scss'
-  exec 'bundle exec rougify style github > app/styles/_rouge.scss'
+  target = 'tmp/rouge-github.scss'
+  puts "Saving #{target}"
+  system "bundle exec rougify style github > #{target}"
+  puts "Use #{target} as a reference when updating app/styles/_rouge.scss"
 end
 
-help   "Generate pandoc CSS"
+help   "Generate pandoc CSS reference"
 action :pandoc do
   File.write 'tmp/pandoc-style.css', '$highlighting-css$'
   sample = <<~CODE
@@ -26,10 +28,7 @@ action :pandoc do
   CODE
   File.write 'tmp/pandoc-dummy.md', sample
 
-  puts 'Saving app/styles/_pandoc_code.scss'
+  puts 'Saving tmp/pandoc.scss'
   system 'pandoc tmp/pandoc-dummy.md --metadata title=dummy --highlight-style=pygments --template=tmp/pandoc-style.css > tmp/pandoc.scss'
-
-  css = File.read 'tmp/pandoc.scss'
-  patched_css = css.gsub(/^(.sourceCode { overflow: visible; })/, '// \1')
-  File.write 'app/styles/_pandoc_code.scss', patched_css
+  puts 'Use tmp/pandoc.scss as a reference when updating app/styles/_pandoc_code.scss'
 end

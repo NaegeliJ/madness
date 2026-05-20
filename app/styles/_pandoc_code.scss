@@ -1,9 +1,6 @@
 // Pandoc syntax highlighting.
 //
-// NOTE: previously regenerated via `bundle exec run css pandoc`. Do not run
-// that task anymore — this file is hand-tuned to use CSS variables so the
-// same markup themes correctly under both light and dark palettes.
-// See `--rouge-*` tokens in `_variables.scss` (shared with Rouge).
+// Use `bundle exec run css pandoc` to generate update reference CSS.
 
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { line-height: 1.25; }
