@@ -5,7 +5,7 @@
             base_uri:  ~
           sort_order:  dirs_first
              sidebar:  true
-            nav_tree:  false
+            nav_tree:  ~
              auto_h1:  true
             auto_nav:  true
             auto_toc:  true
@@ -23,3 +23,4 @@
            auth_zone:  Restricted Documentation
    expose_extensions:  ~
              exclude:  ["^[a-z_\\-0-9]+$"]
+
