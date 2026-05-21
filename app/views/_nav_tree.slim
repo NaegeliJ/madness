@@ -1,0 +1,13 @@
+- items.each do |item|
+  - if item.dir? && item.children && item.children.any?
+    - is_open = current_path == item.path || current_path.start_with?("#{item.path}/")
+    details.tree-folder open=is_open
+      summary.tree-summary
+        span.tree-chevron aria-hidden="true"
+        a.document.strong href="#{item.href}" = item.label
+      .tree-children
+        == slim :_nav_tree, locals: { items: item.children, current_path: current_path }
+  - elsif item.dir?
+    a.document.strong href="#{item.href}" = item.label
+  - else
+    a.document href="#{item.href}" = item.label

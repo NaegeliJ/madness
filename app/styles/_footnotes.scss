@@ -1,5 +1,34 @@
 .footnotes {
   color: var(--footnotes-color);
   font-size: 85%;
+  border-top: 1px solid var(--hr-color);
+  margin-top: 2em;
+  padding-top: 1em;
+
+  ol {
+    padding-left: 1.5em;
+  }
+
+  li {
+    margin-bottom: 0.5em;
+  }
 }
 
+// Mermaid diagram container. Mermaid emits an inline SVG; centering and
+// breathing room here. The diagram itself themes via mermaid's own dark theme,
+// initialized in the layout view based on data-theme.
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid var(--code-border-color);
+  border-radius: 8px;
+  background-color: transparent;
+  overflow-x: auto;
+
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+}

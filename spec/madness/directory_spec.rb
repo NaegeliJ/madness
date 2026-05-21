@@ -6,6 +6,31 @@ describe Directory do
     config.path = 'spec/fixtures/docroot/Sorting'
   end
 
+  describe '#tree' do
+    before do
+      config.reset
+      config.path = 'spec/fixtures/nav'
+    end
+
+    it 'attaches recursive children to directory items' do
+      tree = subject.tree
+      folder = tree.find { |i| i.label == 'Folder' }
+
+      expect(folder).to be_a(Item)
+      expect(folder.dir?).to be true
+      expect(folder.children).to be_an(Array)
+      expect(folder.children.map(&:label)).to eq ['Nested']
+    end
+
+    it 'leaves file items without children' do
+      tree = subject.tree
+      file = tree.find { |i| i.label == 'XFile' }
+
+      expect(file.file?).to be true
+      expect(file.children).to be_nil
+    end
+  end
+
   describe '#list' do
     it 'returns a naturally sorted array of Items' do
       list = subject.list

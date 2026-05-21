@@ -1,39 +1,220 @@
+// Theme variables.
+//
+// Light palette lives on :root. Dark palette overrides apply when either the
+// system prefers dark OR the user has explicitly chosen dark via the toggle
+// (data-theme="dark" on <html>). An explicit data-theme="light" wins back
+// even when the system prefers dark.
+
 :root {
-  --background-color: #fff;
-  --blockquote-border-color: #ddd;
-  --blockquote-color: #777;
-  --breadcrumbs-border-color: #ccc;
-  --code-border-color: #ddd;
-  --font-color: #333;
-  --font-family: "Segoe UI", "Helvetica Neue", Helvetica,Arial, freesans, sans-serif;
-  --font-family-monospace: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  --footnotes-color: #666;
-  --h1-border-color: #eee;
-  --h1-color: #333;
-  --h2-border-color: #eee;
-  --h2-color: #333;
-  --h3-color: #333;
-  --h4-color: #333;
-  --h5-color: #333;
-  --h6-color: #777;
-  --highlight-color: palegreen;
-  --hr-color: #ddd;
-  --inline-code-bg-color: #eee;
-  --kbd-bg-color: #fcfcfc;
-  --kbd-border-color: #ccc;
-  --kbd-color: #111;
-  --kbd-shadow-color: #bbb;
-  --link-color: #4078c0;
-  --quiet-color: #777;
-  --scrollbar-color: #ccc;
-  --search-field-border-color: #ccc;
-  --search-field-focused-border-color: #4078c0;
-  --sidebar-bg-color: #fff;
-  --sidebar-border-color: #ddd;
-  --sidebar-border-right-color: #ddd;
-  --table-alt-row-bg-color: transparent;
+  color-scheme: light dark;
+
+  // Surfaces
+  --background-color: #fdfdfd;
+  --sidebar-bg-color: #fafafa;
+  --sidebar-border-color: #ececec;
+  --sidebar-border-right-color: #e4e4e4;
+  --sidebar-hover-bg-color: #f0f0f0;
+  --sidebar-active-bg-color: #eef3fb;
+
+  // Typography
+  --font-color: #1f2328;
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-family-monospace: ui-monospace, "SFMono-Regular", "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+  --quiet-color: #656d76;
+  --footnotes-color: #656d76;
+
+  // Headings
+  --h1-color: #1f2328;
+  --h1-border-color: #eaeef2;
+  --h2-color: #1f2328;
+  --h2-border-color: #eaeef2;
+  --h3-color: #1f2328;
+  --h4-color: #1f2328;
+  --h5-color: #1f2328;
+  --h6-color: #656d76;
+
+  // Links
+  --link-color: #0969da;
+  --link-hover-color: #0550ae;
+
+  // Code
+  --code-border-color: #eaeef2;
+  --code-bg-color: #f6f8fa;
+  --inline-code-bg-color: #f6f8fa;
+  --inline-code-color: #1f2328;
+
+  // Blockquote
+  --blockquote-color: #656d76;
+  --blockquote-border-color: #d0d7de;
+
+  // Tables
+  --table-border-color: #eaeef2;
   --table-bg-color: transparent;
-  --table-border-color: #ddd;
-  --table-header-bg-color: transparent;
+  --table-header-bg-color: #f6f8fa;
   --table-row-bg-color: transparent;
+  --table-alt-row-bg-color: #fafbfc;
+
+  // Search
+  --search-field-bg-color: #ffffff;
+  --search-field-border-color: #d0d7de;
+  --search-field-focused-border-color: #0969da;
+  --search-field-shadow-color: rgba(9, 105, 218, 0.18);
+
+  // Keyboard
+  --kbd-color: #1f2328;
+  --kbd-bg-color: #f6f8fa;
+  --kbd-border-color: #d0d7de;
+  --kbd-shadow-color: #afb8c1;
+
+  // Misc
+  --highlight-color: #fff8c5;
+  --highlight-text-color: #1f2328;
+  --hr-color: #eaeef2;
+  --scrollbar-color: #d0d7de;
+  --scrollbar-hover-color: #afb8c1;
+  --breadcrumbs-border-color: #eaeef2;
+  --selection-bg-color: rgba(9, 105, 218, 0.20);
+  --selection-color: inherit;
+  --focus-ring-color: rgba(9, 105, 218, 0.40);
+
+  // Rouge syntax (light — derived from GitHub light)
+  --rouge-bg: var(--code-bg-color);
+  --rouge-fg: #1f2328;
+  --rouge-comment: #6e7781;
+  --rouge-comment-strong: #6e7781;
+  --rouge-error-fg: #82071e;
+  --rouge-error-bg: #ffebe9;
+  --rouge-keyword: #cf222e;
+  --rouge-operator: #cf222e;
+  --rouge-name: #1f2328;
+  --rouge-name-attribute: #116329;
+  --rouge-name-builtin: #953800;
+  --rouge-name-class: #953800;
+  --rouge-name-constant: #0550ae;
+  --rouge-name-function: #8250df;
+  --rouge-name-tag: #116329;
+  --rouge-name-variable: #953800;
+  --rouge-literal-string: #0a3069;
+  --rouge-literal-number: #0550ae;
+  --rouge-literal-regex: #0a3069;
+  --rouge-generic-deleted-fg: #82071e;
+  --rouge-generic-deleted-bg: #ffebe9;
+  --rouge-generic-inserted-fg: #116329;
+  --rouge-generic-inserted-bg: #dafbe1;
+  --rouge-generic-heading: #0550ae;
+  --rouge-generic-subheading: #0550ae;
+  --rouge-line-number: #8c959f;
+}
+
+// Manual override: user picked light.
+:root[data-theme="light"] {
+  // Inherits :root defaults. Block exists so dark @media doesn't override it.
+}
+
+@mixin dark-palette {
+  color-scheme: dark;
+
+  // Surfaces
+  --background-color: #0d1117;
+  --sidebar-bg-color: #010409;
+  --sidebar-border-color: #21262d;
+  --sidebar-border-right-color: #21262d;
+  --sidebar-hover-bg-color: #161b22;
+  --sidebar-active-bg-color: #1f2937;
+
+  // Typography
+  --font-color: #e6edf3;
+  --quiet-color: #8d96a0;
+  --footnotes-color: #8d96a0;
+
+  // Headings
+  --h1-color: #f0f6fc;
+  --h1-border-color: #21262d;
+  --h2-color: #f0f6fc;
+  --h2-border-color: #21262d;
+  --h3-color: #f0f6fc;
+  --h4-color: #f0f6fc;
+  --h5-color: #f0f6fc;
+  --h6-color: #8d96a0;
+
+  // Links
+  --link-color: #58a6ff;
+  --link-hover-color: #79b8ff;
+
+  // Code
+  --code-border-color: #30363d;
+  --code-bg-color: #161b22;
+  --inline-code-bg-color: rgba(110, 118, 129, 0.30);
+  --inline-code-color: #e6edf3;
+
+  // Blockquote
+  --blockquote-color: #8d96a0;
+  --blockquote-border-color: #30363d;
+
+  // Tables
+  --table-border-color: #30363d;
+  --table-header-bg-color: #161b22;
+  --table-alt-row-bg-color: #0f1419;
+
+  // Search
+  --search-field-bg-color: #0d1117;
+  --search-field-border-color: #30363d;
+  --search-field-focused-border-color: #58a6ff;
+  --search-field-shadow-color: rgba(88, 166, 255, 0.25);
+
+  // Keyboard
+  --kbd-color: #e6edf3;
+  --kbd-bg-color: #161b22;
+  --kbd-border-color: #30363d;
+  --kbd-shadow-color: #30363d;
+
+  // Misc
+  --highlight-color: rgba(187, 128, 9, 0.40);
+  --highlight-text-color: #f0f6fc;
+  --hr-color: #21262d;
+  --scrollbar-color: #30363d;
+  --scrollbar-hover-color: #484f58;
+  --breadcrumbs-border-color: #21262d;
+  --selection-bg-color: rgba(56, 139, 253, 0.30);
+  --focus-ring-color: rgba(88, 166, 255, 0.45);
+
+  // Rouge syntax (dark — derived from GitHub dark)
+  --rouge-bg: var(--code-bg-color);
+  --rouge-fg: #e6edf3;
+  --rouge-comment: #8b949e;
+  --rouge-comment-strong: #8b949e;
+  --rouge-error-fg: #ffa198;
+  --rouge-error-bg: rgba(248, 81, 73, 0.15);
+  --rouge-keyword: #ff7b72;
+  --rouge-operator: #ff7b72;
+  --rouge-name: #e6edf3;
+  --rouge-name-attribute: #7ee787;
+  --rouge-name-builtin: #ffa657;
+  --rouge-name-class: #ffa657;
+  --rouge-name-constant: #79c0ff;
+  --rouge-name-function: #d2a8ff;
+  --rouge-name-tag: #7ee787;
+  --rouge-name-variable: #ffa657;
+  --rouge-literal-string: #a5d6ff;
+  --rouge-literal-number: #79c0ff;
+  --rouge-literal-regex: #7ee787;
+  --rouge-generic-deleted-fg: #ffdcd7;
+  --rouge-generic-deleted-bg: rgba(248, 81, 73, 0.15);
+  --rouge-generic-inserted-fg: #aff5b4;
+  --rouge-generic-inserted-bg: rgba(46, 160, 67, 0.15);
+  --rouge-generic-heading: #79c0ff;
+  --rouge-generic-subheading: #79c0ff;
+  --rouge-line-number: #6e7681;
+}
+
+// System dark — apply unless user explicitly chose light.
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark-palette;
+  }
+}
+
+// Manual dark override — wins over system preference.
+:root[data-theme="dark"] {
+  @include dark-palette;
 }

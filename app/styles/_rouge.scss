@@ -1,213 +1,59 @@
-.highlight table td { padding: 5px; }
-.highlight table pre { margin: 0; }
-.highlight .cm {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .cp {
-  color: #999999;
-  font-weight: bold;
-}
-.highlight .c1 {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .cs {
-  color: #999999;
-  font-weight: bold;
-  font-style: italic;
-}
-.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
-  color: #999988;
-  font-style: italic;
-}
-.highlight .err {
-  color: #a61717;
-  background-color: #e3d2d2;
-}
-.highlight .gd {
-  color: #000000;
-  background-color: #ffdddd;
-}
-.highlight .ge {
-  color: #000000;
-  font-style: italic;
-}
-.highlight .gr {
-  color: #aa0000;
-}
-.highlight .gh {
-  color: #999999;
-}
-.highlight .gi {
-  color: #000000;
-  background-color: #ddffdd;
-}
-.highlight .go {
-  color: #888888;
-}
-.highlight .gp {
-  color: #555555;
-}
-.highlight .gs {
-  font-weight: bold;
-}
-.highlight .gu {
-  color: #aaaaaa;
-}
-.highlight .gt {
-  color: #aa0000;
-}
-.highlight .kc {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kd {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kn {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kp {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kr {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .kt {
-  color: #445588;
-  font-weight: bold;
-}
-.highlight .k, .highlight .kv {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .mf {
-  color: #009999;
-}
-.highlight .mh {
-  color: #009999;
-}
-.highlight .il {
-  color: #009999;
-}
-.highlight .mi {
-  color: #009999;
-}
-.highlight .mo {
-  color: #009999;
-}
-.highlight .m, .highlight .mb, .highlight .mx {
-  color: #009999;
-}
-.highlight .sa {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .sb {
-  color: #d14;
-}
-.highlight .sc {
-  color: #d14;
-}
-.highlight .sd {
-  color: #d14;
-}
-.highlight .s2 {
-  color: #d14;
-}
-.highlight .se {
-  color: #d14;
-}
-.highlight .sh {
-  color: #d14;
-}
-.highlight .si {
-  color: #d14;
-}
-.highlight .sx {
-  color: #d14;
-}
-.highlight .sr {
-  color: #009926;
-}
-.highlight .s1 {
-  color: #d14;
-}
-.highlight .ss {
-  color: #990073;
-}
-.highlight .s, .highlight .dl {
-  color: #d14;
-}
-.highlight .na {
-  color: #008080;
-}
-.highlight .bp {
-  color: #999999;
-}
-.highlight .nb {
-  color: #0086B3;
-}
-.highlight .nc {
-  color: #445588;
-  font-weight: bold;
-}
-.highlight .no {
-  color: #008080;
-}
-.highlight .nd {
-  color: #3c5d5d;
-  font-weight: bold;
-}
-.highlight .ni {
-  color: #800080;
-}
-.highlight .ne {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nf, .highlight .fm {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nl {
-  color: #990000;
-  font-weight: bold;
-}
-.highlight .nn {
-  color: #555555;
-}
-.highlight .nt {
-  color: #000080;
-}
-.highlight .vc {
-  color: #008080;
-}
-.highlight .vg {
-  color: #008080;
-}
-.highlight .vi {
-  color: #008080;
-}
-.highlight .nv, .highlight .vm {
-  color: #008080;
-}
-.highlight .ow {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .o {
-  color: #000000;
-  font-weight: bold;
-}
-.highlight .w {
-  color: #bbbbbb;
-}
+// Rouge syntax highlighting.
+//
+// Use `bundle exec run css rouge` to generate update reference CSS.
+
 .highlight {
-  background-color: #f8f8f8;
+  background: var(--rouge-bg);
+  color: var(--rouge-fg);
+
+  table td { padding: 5px; }
+  table pre { margin: 0; }
+
+  .lineno     { color: var(--rouge-line-number); }
+
+  .c, .cd, .cm, .c1, .cs, .cp  { color: var(--rouge-comment); font-style: italic; }
+  .cs                          { font-weight: bold; }
+
+  .err     { color: var(--rouge-error-fg); background-color: var(--rouge-error-bg); }
+  .gd      { color: var(--rouge-generic-deleted-fg); background-color: var(--rouge-generic-deleted-bg); }
+  .gd .x   { color: var(--rouge-generic-deleted-fg); background-color: var(--rouge-generic-deleted-bg); }
+  .ge      { font-style: italic; }
+  .gr      { color: var(--rouge-error-fg); }
+  .gh      { color: var(--rouge-generic-heading); }
+  .gi      { color: var(--rouge-generic-inserted-fg); background-color: var(--rouge-generic-inserted-bg); }
+  .gi .x   { color: var(--rouge-generic-inserted-fg); background-color: var(--rouge-generic-inserted-bg); }
+  .go      { color: var(--rouge-comment); }
+  .gp      { color: var(--rouge-comment); }
+  .gs      { font-weight: bold; }
+  .gu      { color: var(--rouge-generic-subheading); }
+  .gt      { color: var(--rouge-error-fg); }
+
+  .k, .kc, .kd, .kp, .kr   { color: var(--rouge-keyword); font-weight: bold; }
+  .kt                      { color: var(--rouge-name-class); font-weight: bold; }
+
+  .o, .ow  { color: var(--rouge-operator); font-weight: bold; }
+
+  .m, .mf, .mh, .mi, .mo, .il   { color: var(--rouge-literal-number); }
+
+  .s, .sb, .sc, .sd, .s2, .se, .sh, .si, .sx, .s1, .ss { color: var(--rouge-literal-string); }
+  .sr  { color: var(--rouge-literal-regex); }
+
+  .n   { color: var(--rouge-name); }
+  .na  { color: var(--rouge-name-attribute); }
+  .nb  { color: var(--rouge-name-builtin); }
+  .nc  { color: var(--rouge-name-class); font-weight: bold; }
+  .no  { color: var(--rouge-name-constant); }
+  .ni  { color: var(--rouge-name-builtin); }
+  .ne  { color: var(--rouge-name-class); font-weight: bold; }
+  .nf  { color: var(--rouge-name-function); font-weight: bold; }
+  .nn  { color: var(--rouge-name-class); }
+  .nt  { color: var(--rouge-name-tag); }
+  .nv  { color: var(--rouge-name-variable); }
+
+  .bp  { color: var(--rouge-name-builtin); }
+  .vc  { color: var(--rouge-name-variable); }
+  .vg  { color: var(--rouge-name-variable); }
+  .vi  { color: var(--rouge-name-variable); }
+
+  .w   { color: var(--rouge-line-number); }
 }

@@ -4,14 +4,14 @@
 
 p {
   margin-top: 0;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 blockquote {
   color: var(--blockquote-color);
   border-left: 4px solid var(--blockquote-border-color);
   margin: 0;
-  padding: 0 15px;
+  padding: 4px 16px;
 
   &>:first-child {
     margin-top: 0;
@@ -29,6 +29,9 @@ p, blockquote, ul, ol, dl, table, pre {
 
 mark {
   background-color: var(--highlight-color);
+  color: var(--highlight-text-color);
+  padding: 0 0.2em;
+  border-radius: 3px;
 }
 
 .quiet {

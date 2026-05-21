@@ -1,3 +1,4 @@
+require 'cgi'
 require 'pandoc-ruby'
 
 module Madness
@@ -18,7 +19,7 @@ module Madness
 
       def process_mermaid_blocks(text)
         text.gsub(/```mermaid\s+(.+?)\s+```/m) do
-          "<div class='mermaid'>#{$1.strip}</div>"
+          "<div class='mermaid'>#{CGI.escapeHTML($1.strip)}</div>"
         end
       end
     end

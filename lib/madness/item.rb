@@ -5,6 +5,7 @@ module Madness
     using StringRefinements
 
     attr_reader :path, :type
+    attr_accessor :children
 
     def initialize(path, type)
       @path = path

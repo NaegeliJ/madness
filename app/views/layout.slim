@@ -8,6 +8,16 @@ html
     title = locals[:title]
     meta name="HandheldFriendly" content="true"
     meta name="viewport" content="width=device-width, initial-scale=1"
+    meta name="color-scheme" content="light dark"
+    javascript:
+      (function () {
+        try {
+          var stored = localStorage.getItem('madness-theme');
+          if (stored === 'dark' || stored === 'light') {
+            document.documentElement.setAttribute('data-theme', stored);
+          }
+        } catch (e) {}
+      })();
     link href='#{config.base_uri}/css/main.css' rel='stylesheet' type='text/css'
     - custom_css.each do |file|
       link href="#{config.base_uri}/#{file}" rel='stylesheet' type='text/css'
@@ -20,7 +30,22 @@ html
     - if config.mermaid
       script src="#{config.base_uri}/js/vendor/mermaid.min.js"
       javascript:
-        mermaid.initialize({startOnLoad:true});
+        (function () {
+          function currentTheme() {
+            var t = document.documentElement.getAttribute('data-theme');
+            if (t) return t;
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          }
+          window.mermaid.initialize({
+            startOnLoad: true,
+            theme: currentTheme() === 'dark' ? 'dark' : 'default'
+          });
+        })();
+
+    script src="#{config.base_uri}/js/theme.js" defer=true
 
   body
     == yield
+    a.floating-theme-toggle href="#" role="button" aria-label="Toggle dark mode" title="Toggle theme"
+      == slim :_icon, locals: { name: :moon }
+      == slim :_icon, locals: { name: :sun }

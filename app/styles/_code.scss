@@ -1,24 +1,42 @@
+code, pre, kbd {
+  font-family: var(--font-family-monospace);
+}
+
 code {
   background-color: var(--inline-code-bg-color);
-  padding: 0px 8px;
+  color: var(--inline-code-color);
+  padding: 0.15em 0.4em;
   margin: 0;
-  font-size: 90%;
-  border-radius: 3px;
-  display: inline-block;
+  font-size: 87%;
+  border-radius: 6px;
+  font-feature-settings: "calt" 0;
+  white-space: break-spaces;
 }
 
 pre {
   position: relative;
-
+  background-color: var(--code-bg-color);
   border: 1px solid var(--code-border-color);
-  border-radius: 5px;
+  border-radius: 8px;
   overflow-x: auto;
-  padding: 10px;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
 
   code {
     background-color: transparent;
+    color: inherit;
+    padding: 0;
     display: block;
-    line-height: 1.2;
+    line-height: inherit;
+    font-size: inherit;
     position: relative;
+    border-radius: 0;
   }
+}
+
+// Soften inline-code inside links or headings.
+a code, h1 code, h2 code, h3 code, h4 code, h5 code, h6 code {
+  font-size: 0.85em;
+  color: inherit;
 }

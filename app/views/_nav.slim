@@ -1,15 +1,25 @@
 nav
   .icon-bar
-    a.icon href="#{config.base_uri}/" accesskey='h' class=('wide' unless nav.with_search?)
-      i.icon-home
+    a.icon href="#{config.base_uri}/" accesskey='h' title="Home"
+      == slim :_icon, locals: { name: :home }
 
     - if nav.with_search?
-      a.icon href="#{config.base_uri}/_search" accesskey='s' style='text-align:right'
-        i.icon-search 
+      a.icon href="#{config.base_uri}/_search" accesskey='s' title="Search"
+        == slim :_icon, locals: { name: :search }
 
-  - if nav.caption
+    .icon-spacer
+
+    a.icon.theme-toggle href="#" role="button" aria-label="Toggle dark mode" title="Toggle theme"
+      == slim :_icon, locals: { name: :moon }
+      == slim :_icon, locals: { name: :sun }
+
+
+  - if nav.caption && !nav.tree?
     .caption = "#{nav.caption}:"
 
-  - nav.links.each do |item|
-    a.document href="#{item.href}" class=('strong' if item.type == :dir)
-      = item.label
+  - if nav.tree?
+    == slim :_nav_tree, locals: { items: nav.tree, current_path: nav.current_path }
+  - else
+    - nav.links.each do |item|
+      a.document href="#{item.href}" class=('strong' if item.type == :dir)
+        = item.label

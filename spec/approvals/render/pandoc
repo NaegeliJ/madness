@@ -9,7 +9,7 @@ support</strong> in it</p>
 </blockquote>
 <p>Inline <code>code_word</code> and block code:</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">def</span> say(message <span class="kw">=</span> <span class="st">&quot;Hi&quot;</span>)</span>
+class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="cf">def</span> say(message <span class="op">=</span> <span class="st">&quot;Hi&quot;</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">puts</span> message</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code></pre></div>
 <h2 id="footnotes-images">Footnotes, Images</h2>
@@ -53,13 +53,13 @@ href="http://example.com">http://example.com</a></li>
 <p>Press <kbd>F12</kbd> to open the console.</p>
 <table>
 <thead>
-<tr class="header">
+<tr>
 <th>Shortcut</th>
 <th>Result</th>
 </tr>
 </thead>
 <tbody>
-<tr class="odd">
+<tr>
 <td><kbd>F12</kbd></td>
 <td>Open console</td>
 </tr>
@@ -89,10 +89,10 @@ graph TD;
 
 <p>Or using the <code>mermaid</code> code block:</p>
 <div class='mermaid'>graph TD;
-    A-->B;
-    A-->C;
-    B-->D;
-    C-->D;</div>
+    A--&gt;B;
+    A--&gt;C;
+    B--&gt;D;
+    C--&gt;D;</div>
 
 <h2 id="unsafe-html">Unsafe HTML</h2>
 <p>This is calculated by Javascript: <span id='demo'></div></p>

@@ -9,47 +9,231 @@ nav {
 
   background: var(--sidebar-bg-color);
   border-right: 1px solid var(--sidebar-border-right-color);
+  color: var(--font-color);
 
   height: 100vh;
   width: 300px;
   overflow-y: auto;
   position: fixed;
-
+  font-size: 14px;
   .icon-bar {
     background: var(--sidebar-bg-color);
-    border-bottom: 1px dotted var(--sidebar-border-color);
+    border-bottom: 1px solid var(--sidebar-border-color);
     position: sticky;
     top: 0;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
   }
 
   a.document, span.document, .caption {
-    border-bottom: 1px dotted var(--sidebar-border-color);
-    // &:hover {
-    //   background: #e4e4e4;
-    // }
-
+    border-bottom: 1px solid var(--sidebar-border-color);
     display: block;
-    padding: 5px 20px 5px 30px;
+    padding: 8px 20px 8px 26px;
+    color: var(--font-color);
+    border-left: 3px solid transparent;
+  }
+
+  a.document:hover {
+    background: var(--sidebar-hover-bg-color);
+    color: var(--link-color);
+    border-left-color: var(--link-color);
+  }
+
+  a.document.strong {
+    font-weight: 600;
+  }
+
+  .caption {
+    color: var(--quiet-color);
+    font-size: 12px;
+    font-weight: 500;
+    padding-top: 14px;
+    padding-bottom: 6px;
+    border-bottom: none;
   }
 
   a.icon {
-    display: inline-block;
-    font-size: 1.5em;
-    width: 50%;
-    padding: 3px 20px 3px 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25em;
+    width: 44px;
+    height: 40px;
+    border-radius: 6px;
+    color: var(--font-color);
     &.wide {
-      width: 100%
+      flex: 1;
     }
-    // &:hover {
-    //   background: #e4e4e4;
-    // }
+
+    &:hover {
+      background: var(--sidebar-hover-bg-color);
+      color: var(--link-color);
+    }
+
+    .icon-svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
   }
 
+  .icon-spacer {
+    flex: 1;
+  }
 
   &:after {
     content: "";
     height: 90px;
     display: block;
+  }
+
+  // Nested folder tree (details/summary based).
+  details.tree-folder {
+    > summary.tree-summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      border-bottom: 1px solid var(--sidebar-border-color);
+      &::-webkit-details-marker { display: none; }
+
+      &:hover {
+        background: var(--sidebar-hover-bg-color);
+      }
+
+      .tree-chevron {
+        flex: 0 0 18px;
+        width: 18px;
+        height: 18px;
+        margin-left: 8px;
+        position: relative;
+        color: var(--quiet-color);
+        transition: transform 150ms ease;
+
+        &::before {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 6px;
+          height: 6px;
+          border-right: 1.5px solid currentColor;
+          border-bottom: 1.5px solid currentColor;
+          transform: translate(-65%, -50%) rotate(-45deg);
+        }
+      }
+
+      // The .document anchor inside the summary should fill the row but not
+      // re-draw its own bottom border (the summary already has one).
+      > a.document {
+        flex: 1;
+        border-bottom: none;
+        border-left: none;
+        padding-left: 6px;
+      }
+
+      &:hover .tree-chevron {
+        color: var(--link-color);
+      }
+    }
+
+    &[open] > summary.tree-summary .tree-chevron::before {
+      transform: translate(-50%, -65%) rotate(45deg);
+    }
+
+    // Children container — subtle indent + left guide line.
+    .tree-children {
+      margin-left: 18px;
+      border-left: 1px solid var(--sidebar-border-color);
+
+      // Inside children, document rows lose the chunky left-padding so the
+      // hierarchy reads as indented but not crowded.
+      > a.document,
+      > details.tree-folder > summary.tree-summary > a.document {
+        padding-left: 10px;
+      }
+
+      > a.document {
+        padding-left: 16px;
+      }
+    }
+  }
+}
+
+// Theme toggle icon visibility — JS sets data-theme on <html>; CSS uses it to
+// flip which glyph is shown. Falls back to system preference when no choice
+// has been made.
+.theme-toggle, .floating-theme-toggle {
+  .icon-sun  { display: none; }
+  .icon-moon { display: inline-block; }
+}
+
+:root[data-theme="dark"] {
+  .theme-toggle, .floating-theme-toggle {
+    .icon-sun  { display: inline-block; }
+    .icon-moon { display: none; }
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    .theme-toggle, .floating-theme-toggle {
+      .icon-sun  { display: inline-block; }
+      .icon-moon { display: none; }
+    }
+  }
+}
+
+// Floating fallback toggle — visible when the sidebar isn't, so the toggle is
+// always reachable. On desktop it hides because the sidebar version covers it.
+.floating-theme-toggle {
+  position: fixed;
+  bottom: 18px;
+  right: 18px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--sidebar-bg-color);
+  border: 1px solid var(--sidebar-border-color);
+  color: var(--font-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 120ms ease;
+
+  &:hover {
+    background: var(--sidebar-hover-bg-color);
+    transform: translateY(-1px);
+  }
+
+  .icon-svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media print {
+    display: none;
+  }
+
+  @include desktop {
+    // On desktop, when a sidebar is present, the sidebar toggle is used.
+    body:has(nav) & {
+      display: none;
+    }
   }
 }
