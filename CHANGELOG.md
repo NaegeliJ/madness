@@ -1,6 +1,14 @@
 Changelog
 ========================================
 
+v1.3.0 - 2026-05-21
+----------------------------------------
+
+- Remove Filewatcher dependency [`2919e61`](https://github.com/DannyBen/madness/commit/2919e61)
+- Add dark theme support and nested sidebar [`2e6620e`](https://github.com/DannyBen/madness/commit/2e6620e)
+- Compare [`v1.2.5..v1.3.0`](https://github.com/dannyben/madness/compare/v1.2.5..v1.3.0)
+
+
 v1.2.5 - 2025-12-06
 ----------------------------------------
 
