@@ -34,6 +34,7 @@ markdown-based documentation sites.</p>
 <ul>
 <li><a href="#cover-pages">Cover Pages</a></li>
 <li><a href="#search">Search</a></li>
+<li><a href="#navigation-tree">Navigation Tree</a></li>
 <li><a href="#images-and-static-files">Images and Static Files</a></li>
 <li><a href="#automatic-h1">Automatic H1</a></li>
 <li><a href="#shortlinks">Shortlinks</a></li>
@@ -78,6 +79,7 @@ markdown-based documentation sites.</p>
 <li>Compatible with how markdown files are displayed on GitHub and GitHub pages.</li>
 <li>Configure with a configuration file or command arguments.</li>
 <li>Fully customizable theme.</li>
+<li>Built-in light and dark theme support.</li>
 <li>Automatic generation of navigation sidebar.</li>
 <li>Automatic generation of Table of Contents (site-wide and per page).</li>
 <li>Can optionally show additional file types in the navigation menu (e.g. PDF
@@ -158,6 +160,11 @@ your documentation directory.</p>
 
 <span class="c1"># enable sidebar</span>
 <span class="na">sidebar</span><span class="pi">:</span> <span class="kc">true</span>
+
+<span class="c1"># render the sidebar as a recursive tree of the entire docroot, with</span>
+<span class="c1"># collapsible folders. when false, the sidebar shows only the current</span>
+<span class="c1"># folder's immediate children.</span>
+<span class="na">nav_tree</span><span class="pi">:</span> <span class="kc">false</span>
 
 <span class="c1"># add H1 title to files that do not have one</span>
 <span class="na">auto_h1</span><span class="pi">:</span> <span class="kc">true</span>
@@ -252,6 +259,13 @@ to the contents of a specific directory.</p>
 
 <p>Madness comes with a full text search page.</p>
 
+<h3 id="navigation-tree">Navigation Tree</h3>
+
+<p>By default, the sidebar shows the current folder&#39;s immediate children. To render
+the sidebar as a recursive tree of the entire documentation root, enable the
+<code>nav_tree</code> option:</p>
+<div class="highlight"><pre class="highlight yaml"><code><span class="na">nav_tree</span><span class="pi">:</span> <span class="kc">true</span>
+</code></pre></div>
 <h3 id="images-and-static-files">Images and Static Files</h3>
 
 <p>You can put images and other asset files anywhere in your documentation
@@ -377,6 +391,11 @@ extensions:</p>
 <h2 id="customizing-theme">Customizing Theme</h2>
 
 <p>There are three ways to change how Madness looks. </p>
+
+<p>The built-in theme supports light and dark color schemes. It follows the
+browser or operating system preference by default, and readers can use the theme
+toggle to switch between light and dark. The selected preference is stored in
+the browser for future visits.</p>
 
 <h3 id="option-1-css-overrides">Option 1: CSS Overrides</h3>
 

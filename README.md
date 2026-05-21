@@ -42,6 +42,7 @@ $ alias madness='docker run --rm -it -v $PWD:/docs -p 3000:3000 dannyben/madness
 - Compatible with how markdown files are displayed on GitHub and GitHub pages.
 - Configure with a configuration file or command arguments.
 - Fully customizable theme.
+- Built-in light and dark theme support.
 - Automatic generation of navigation sidebar.
 - Automatic generation of Table of Contents (site-wide and per page).
 - Can optionally show additional file types in the navigation menu (e.g. PDF
