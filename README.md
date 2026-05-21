@@ -136,6 +136,11 @@ sort_order: dirs_first
 # enable sidebar
 sidebar: true
 
+# render the sidebar as a recursive tree of the entire docroot, with
+# collapsible folders. when false, the sidebar shows only the current
+# folder's immediate children.
+nav_tree: false
+
 # add H1 title to files that do not have one
 auto_h1: true
 
@@ -225,6 +230,16 @@ For example, for a directory named "API Documentation":
 ### Search
 
 Madness comes with a full text search page.
+
+### Navigation Tree
+
+By default, the sidebar shows the current folder's immediate children. To render
+the sidebar as a recursive tree of the entire documentation root, enable the
+`nav_tree` option:
+
+```yaml
+nav_tree: true
+```
 
 ### Images and Static Files
 
@@ -379,6 +394,11 @@ auth: <%= ENV['BASIC_AUTH'] %>
 
 There are three ways to change how Madness looks. 
 
+The built-in theme supports light and dark color schemes. It follows the
+browser or operating system preference by default, and readers can use the theme
+toggle to switch between light and dark. The selected preference is stored in
+the browser for future visits.
+
 ### Option 1: CSS Overrides
 
 Any CSS file found in the `./css` directory of your documentation root will 
@@ -472,4 +492,3 @@ For more information about the docker image, see:
 [dockerfile]: https://github.com/DannyBen/madness/blob/master/Dockerfile
 [css]: https://github.com/DannyBen/madness/blob/master/app/public/css/main.css
 [sasstool]: https://github.com/DannyBen/sasstool
-
