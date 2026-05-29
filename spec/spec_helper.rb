@@ -34,7 +34,6 @@ ENV['RACK_ENV'] = 'test'
 # Create tmp folder for any spec that needs it
 unless Dir.exist? 'tmp'
   Dir.mkdir 'tmp'
-  puts '[spec_helper] creating tmp dir'
 end
 
 # Include us
