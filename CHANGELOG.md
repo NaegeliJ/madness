@@ -1,6 +1,13 @@
 Changelog
 ========================================
 
+v1.3.1 - 2026-07-18
+----------------------------------------
+
+- Fix code copy in redcarpet renderer [`2c7ca81`](https://github.com/DannyBen/madness/commit/2c7ca81)
+- Compare [`v1.3.0..v1.3.1`](https://github.com/dannyben/madness/compare/v1.3.0..v1.3.1)
+
+
 v1.3.0 - 2026-05-21
 ----------------------------------------
 
