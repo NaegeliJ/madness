@@ -2,7 +2,7 @@ FROM dannyben/alpine-ruby:3.3.3
 
 RUN apk add --no-cache pandoc
 
-RUN gem install madness -v 1.3.0
+RUN gem install madness -v 1.3.1
 
 WORKDIR /docs
 
