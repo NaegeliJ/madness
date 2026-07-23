@@ -25,6 +25,17 @@ module Madness
       }
     end
 
+    # Link-graph data, computed on demand from the vault's wikilinks.
+    get "#{config.base_uri}/graph-data.json" do
+      content_type :json
+      Graph.new.to_json
+    end
+
+    # The interactive graph page (a self-contained static asset).
+    get "#{config.base_uri}/graph" do
+      send_file "#{theme.public_path}/graph.html"
+    end
+
     get "#{config.base_uri}/*" do
       path = params[:splat].first
       static_file = find_static_file path
@@ -65,6 +76,8 @@ module Madness
         nav:         nav,
         breadcrumbs: breadcrumbs,
         source_link: source_link,
+        toc:         config.toc_pane ? doc.toc_items : [],
+        frontmatter: doc.frontmatter,
       }
     end
   end

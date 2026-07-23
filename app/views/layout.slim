@@ -19,6 +19,7 @@ html
         } catch (e) {}
       })();
     link href='#{config.base_uri}/css/main.css' rel='stylesheet' type='text/css'
+    link href='#{config.base_uri}/css/fork.css' rel='stylesheet' type='text/css'
     - custom_css.each do |file|
       link href="#{config.base_uri}/#{file}" rel='stylesheet' type='text/css'
 
@@ -42,6 +43,9 @@ html
           });
         })();
 
+    - if config.toc_pane
+      script src="#{config.base_uri}/js/toc-pane.js" defer=true
+
     script src="#{config.base_uri}/js/theme.js" defer=true
 
   body
@@ -49,3 +53,4 @@ html
     a.floating-theme-toggle href="#" role="button" aria-label="Toggle dark mode" title="Toggle theme"
       == slim :_icon, locals: { name: :moon }
       == slim :_icon, locals: { name: :sun }
+    == slim :_mobile_nav

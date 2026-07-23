@@ -66,6 +66,8 @@ module Madness
         highlighter:       true,
         mermaid:           true,
         copy_code:         true,
+        graph:             true,
+        toc_pane:          true,
         shortlinks:        false,
         source_link:       nil,
         source_link_label: 'Page Source',
