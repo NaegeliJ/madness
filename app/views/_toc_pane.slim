@@ -1,0 +1,6 @@
+aside.toc-pane aria-label="Table of contents"
+  .toc-caption On this page
+  ul
+    - toc.each do |item|
+      li class="toc-l#{item[:level]}"
+        a href="##{item[:slug]}" = item[:text]

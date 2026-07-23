@@ -1,3 +1,6 @@
+require 'yaml'
+require 'date'
+
 module Madness
   # Handle a single document path.
   class Document
@@ -5,7 +8,7 @@ module Madness
 
     using StringRefinements
 
-    attr_reader :base, :path, :type, :file, :dir, :title
+    attr_reader :base, :path, :type, :file, :dir
 
     def initialize(path)
       @path = path
@@ -25,6 +28,27 @@ module Madness
 
     def href
       relative_file.to_href
+    end
+
+    # Prefer the frontmatter title (OKF) over the file-name-derived one.
+    def title
+      fm = frontmatter
+      fm && !fm['title'].to_s.empty? ? fm['title'].to_s : @title
+    end
+
+    # Parsed YAML frontmatter (a Hash) or nil. Only for real documents.
+    def frontmatter
+      return nil unless %i[file readme].include? type
+
+      parsed[:frontmatter]
+    end
+
+    # Header list (H2/H3) for the floating TOC pane. Empty for directory
+    # index pages and missing documents, which have no file to read.
+    def toc_items
+      return [] unless %i[file readme].include? type
+
+      @toc_items ||= InlineTableOfContents.new(markdown_text).links
     end
 
   private
@@ -64,11 +88,30 @@ module Madness
     end
 
     def markdown
-      @markdown ||= MarkdownDocument.new(markdown_text, title: title)
+      @markdown ||= MarkdownDocument.new(markdown_text, title: title, dir: dir)
     end
 
+    # The document body, with any YAML frontmatter stripped off.
     def markdown_text
-      @markdown_text ||= File.read file
+      parsed[:body]
+    end
+
+    # Split the file into [frontmatter Hash | nil, body String]. A leading
+    # `---` block is only treated as frontmatter when it parses to a mapping,
+    # so a document that merely starts with a horizontal rule is left intact.
+    def parsed
+      @parsed ||= begin
+        text = File.read file
+        match = text.match(/\A---[ \t]*\r?\n(.*?)\r?\n---[ \t]*(?:\r?\n|\z)/m)
+        data = match ? parse_yaml(match[1]) : nil
+        data.is_a?(Hash) ? { frontmatter: data, body: (text[match.end(0)..] || '') } : { frontmatter: nil, body: text }
+      end
+    end
+
+    def parse_yaml(string)
+      YAML.safe_load(string, permitted_classes: [Date, Time], aliases: true)
+    rescue StandardError
+      nil
     end
 
     def md_file?

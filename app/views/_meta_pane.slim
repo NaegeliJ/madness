@@ -1,0 +1,16 @@
+/ Frontmatter (OKF) shown in the right rail instead of in the article body.
+section.meta-pane aria-label="Metadata"
+  .meta-caption Properties
+  - frontmatter.each do |key, value|
+    - next if key.to_s == 'title' || value.nil? || (value.respond_to?(:empty?) && value.empty?)
+    .meta-row
+      .meta-key = key.to_s.tr('_', ' ')
+      .meta-val
+        - if value.is_a?(Array)
+          .meta-tags
+            - value.each do |item|
+              span.meta-tag = item.to_s
+        - elsif value.to_s.match?(%r{\Ahttps?://})
+          a.meta-link href=value.to_s target="_blank" rel="noopener" = value.to_s
+        - else
+          = value.to_s

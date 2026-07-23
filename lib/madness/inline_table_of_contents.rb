@@ -15,6 +15,19 @@ module Madness
       @markdown ||= ([caption, ''] + items).join "\n"
     end
 
+    # Structured header list for the floating TOC pane:
+    # [{ level: 2|3, text: '...', slug: '...' }, ...]
+    def links
+      headers.map do |line|
+        matches = line.match(/^(?<level>\#{2,3})\s+(?<text>.+)/)
+        {
+          level: matches[:level].size,
+          text:  matches[:text],
+          slug:  matches[:text].to_slug(config.renderer),
+        }
+      end
+    end
+
   protected
 
     def items

@@ -1,7 +1,19 @@
 == slim :_mobile_search if nav.with_search?
 == slim :_nav, locals: { nav: nav } if config.sidebar
 
-.main class=(config.sidebar ? 'with-sidebar' : 'without-sidebar')
+- show_toc = config.toc_pane && toc && toc.length > 1
+- has_meta = frontmatter.is_a?(Hash) && frontmatter.any?
+- show_rail = show_toc || has_meta
+- main_class = [config.sidebar ? 'with-sidebar' : 'without-sidebar', ('has-rail' if show_rail)].compact.join(' ')
+
+- if show_rail
+  .right-rail
+    - if has_meta
+      == slim :_meta_pane, locals: { frontmatter: frontmatter }
+    - if show_toc
+      == slim :_toc_pane, locals: { toc: toc }
+
+.main class=main_class
   - if source_link && source_link[:position] == 'top'
     a.source-link href="#{source_link[:uri]}" = source_link[:label]
 
