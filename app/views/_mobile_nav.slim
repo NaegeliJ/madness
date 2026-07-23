@@ -1,0 +1,13 @@
+/ Bottom navigation bar shown only on mobile, where the sidebar icon bar is
+/ hidden. Pinned to the bottom of the viewport (see fork.css).
+nav.mobile-nav aria-label="Primary"
+  a.mobile-nav-item href="#{config.base_uri}/" title="Home"
+    == slim :_icon, locals: { name: :home }
+  a.mobile-nav-item href="#{config.base_uri}/_search" title="Search"
+    == slim :_icon, locals: { name: :search }
+  - if config.graph
+    a.mobile-nav-item href="#{config.base_uri}/graph" title="Graph"
+      == slim :_icon, locals: { name: :graph }
+  a.mobile-nav-item.theme-toggle href="#" role="button" aria-label="Toggle dark mode" title="Theme"
+    == slim :_icon, locals: { name: :moon }
+    == slim :_icon, locals: { name: :sun }
