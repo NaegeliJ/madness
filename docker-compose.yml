@@ -1,9 +1,19 @@
+# Vault viewer for the madness fork.
+#
+#   docker compose up web    # serve the vault at http://localhost:3000
+#
+# The link graph is computed on demand by the app itself (no extra service),
+# reachable via the graph button in the sidebar or at /graph.
+#
+# Point VAULT at your real vault directory; it defaults to the bundled
+# ./sample example so the stack works out of the box.
 services:
   web:
     build: .
-    image: dannyben/madness
-    volumes: 
-      - ./:/docs
-    ports: 
-      - 3000:3000
+    image: madness-vault
+    volumes:
+      - ${VAULT:-./sample}:/docs
+    ports:
+      - "3000:3000"
     command: server
+    restart: unless-stopped

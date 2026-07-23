@@ -8,6 +8,21 @@ Madness is a command line server for rendering markdown documents in your
 browser. It is designed to facilitate easy development of internal
 markdown-based documentation sites.
 
+> **This fork** turns Madness into a read-only viewer for a personal markdown
+> vault. On top of upstream it adds, all baked into the app (no vault-side
+> files or config required):
+>
+> - **Vault-wide wikilinks** — `[[Note]]` resolves anywhere under the vault.
+> - **Obsidian callouts** — `> [!NOTE]` blocks, foldable via `+`/`-`.
+> - **Interactive link graph** — a sidebar button opens `/graph`, a D3
+>   force-directed view with centrality/robustness metrics computed in Ruby,
+>   plain-language insights, filters, colour schemes and directional hover.
+> - **Floating table-of-contents pane** (issue #182) and an **OKF frontmatter**
+>   panel, shown in a right rail on wide screens.
+> - **Mobile bottom navigation bar.**
+>
+> See [`CLAUDE.md`](CLAUDE.md) for the full rationale and file map.
+
 <!-- MADNESS_TOC -->
 
 ## Screenshots

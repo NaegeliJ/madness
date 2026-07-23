@@ -17,3 +17,11 @@ madness.log
 nohup.out
 toc.txt
 toc.html
+
+# Local demo scaffolding for the sample vault (not part of the fork).
+/sample/.madness.yml
+/sample/graph-data.json
+/sample/Root Note.md
+/sample/OKF Note.md
+/sample/Jedi Order/Nested Note.md
+/sample/Jedi Order/3. Technology and abilities/Deep Note.md
