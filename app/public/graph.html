@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Vault Graph</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('madness-theme');
+        if (stored === 'dark' || stored === 'light') document.documentElement.setAttribute('data-theme', stored);
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    :root { --bg:#f4f5f7; --fg:#1c1e21; --muted:#69758a; --label:#57606a; --panel-bg:rgba(255,255,255,0.92); --panel-border:rgba(0,0,0,0.12); --link:#086ddd; --edge:#c0c6cf; --node-stroke:rgba(0,0,0,0.25); --hl-out:#2f6fd6; --hl-in:#1a9450; --hl-both:#8b2fd6; }
+    @media (prefers-color-scheme: dark) { :root { --bg:#1f2228; --fg:#e6e8eb; --muted:#9aa5b5; --label:#aeb6c2; --panel-bg:rgba(15,17,21,0.92); --panel-border:rgba(255,255,255,0.14); --link:#4c9ffe; --edge:#4d5461; --node-stroke:rgba(255,255,255,0.28); --hl-out:#5aa8ff; --hl-in:#3ad07a; --hl-both:#d896ff; } }
+    :root[data-theme='light'] { --bg:#f4f5f7; --fg:#1c1e21; --muted:#69758a; --label:#57606a; --panel-bg:rgba(255,255,255,0.92); --panel-border:rgba(0,0,0,0.12); --link:#086ddd; --edge:#c0c6cf; --node-stroke:rgba(0,0,0,0.25); --hl-out:#2f6fd6; --hl-in:#1a9450; --hl-both:#8b2fd6; }
+    :root[data-theme='dark'] { --bg:#1f2228; --fg:#e6e8eb; --muted:#9aa5b5; --label:#aeb6c2; --panel-bg:rgba(15,17,21,0.92); --panel-border:rgba(255,255,255,0.14); --link:#4c9ffe; --edge:#4d5461; --node-stroke:rgba(255,255,255,0.28); --hl-out:#5aa8ff; --hl-in:#3ad07a; --hl-both:#d896ff; }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; }
+    body { background: var(--bg); color: var(--fg); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; overflow: hidden; }
+    #graph { position: fixed; inset: 0; width: 100vw; height: 100vh; touch-action: none; }
+
+    /* Fixed floating icon buttons. */
+    .icon-btn {
+      position: fixed; z-index: 60; width: 38px; height: 38px;
+      display: inline-flex; align-items: center; justify-content: center;
+      background: var(--panel-bg); border: 1px solid var(--panel-border);
+      border-radius: 8px; color: var(--fg); cursor: pointer;
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    }
+    .icon-btn:hover { color: var(--link); border-color: var(--link); }
+    .icon-btn .ic { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .icon-btn .ic-collapse { display: none; }
+    #sidebar-toggle { top: 12px; left: 12px; transition: left 0.2s ease; }
+    #settings-toggle { top: 12px; right: 12px; transition: right 0.2s ease; }
+    /* Toggles slide to the panel's inner edge and turn into a collapse arrow. */
+    body.sidebar-open #sidebar-toggle { left: calc(min(290px, 86vw) + 12px); }
+    body.settings-open #settings-toggle { right: calc(min(290px, 86vw) + 12px); }
+    body.sidebar-open #sidebar-toggle .ic-menu { display: none; }
+    body.sidebar-open #sidebar-toggle .ic-collapse { display: block; }
+    body.settings-open #settings-toggle .ic-menu { display: none; }
+    body.settings-open #settings-toggle .ic-collapse { display: block; }
+
+    /* Close-graph button: red, clearly a close action. */
+    #back-btn { bottom: 12px; left: 12px; color: #e93147; border-color: rgba(233, 49, 71, 0.55); }
+    #back-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 2.2; fill: none; stroke-linecap: round; }
+    #back-btn:hover { color: #fff; background: #e93147; border-color: #e93147; }
+
+    /* Collapsible side panels. */
+    .side {
+      position: fixed; top: 0; bottom: 0; width: min(290px, 86vw);
+      display: flex; flex-direction: column;
+      background: var(--panel-bg); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      font-size: 0.82rem; line-height: 1.5; z-index: 50;
+      transition: transform 0.2s ease;
+    }
+    .side.left { left: 0; border-right: 1px solid var(--panel-border); }
+    .side.right { right: 0; border-left: 1px solid var(--panel-border); }
+    .side.left.collapsed { transform: translateX(-100%); }
+    .side.right.collapsed { transform: translateX(100%); }
+
+    /* Fixed header (does not scroll under the icon buttons). */
+    .side-head { flex: none; padding: 12px 14px; border-bottom: 1px solid var(--panel-border); }
+    .side-head h1 { margin: 0; font-size: 1.05rem; }
+    .side-body { flex: 1; overflow-y: auto; padding: 12px 14px 24px; }
+
+    .sb-block { margin-bottom: 1.1rem; }
+    .sb-block:last-child { margin-bottom: 0; }
+    /* Divider between sections so they read apart from the slider labels. */
+    .side-body .sb-block + .sb-block { border-top: 1px solid var(--panel-border); padding-top: 1rem; }
+    .sb-title { font-size: 0.9rem; letter-spacing: 0.01em; color: var(--fg); font-weight: 700; margin-bottom: 0.6rem; }
+
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.82rem;
+      border: 1px solid var(--panel-border); background: transparent; color: var(--fg);
+      cursor: pointer; user-select: none; text-decoration: none;
+    }
+    .btn:hover { border-color: var(--link); color: var(--link); }
+
+    .chips { display: flex; flex-direction: column; gap: 0.35rem; }
+    .chip { font-size: 0.82rem; user-select: none; padding: 0.4rem 0.7rem; border-radius: 999px; border: 1px solid var(--panel-border); background: transparent; color: var(--fg); cursor: pointer; transition: border-color 0.12s ease; }
+    .chip:hover { border-color: var(--link); }
+    .chip.active { background: var(--link); border-color: var(--link); color: #fff; font-weight: 600; }
+    .chip:focus-visible { outline: 2px solid var(--link); outline-offset: 1px; }
+
+    .field { margin-bottom: 0.7rem; }
+    .field label { display: block; color: var(--muted); margin-bottom: 0.2rem; }
+    .field input[type=range] { width: 100%; accent-color: var(--link); }
+    .field input[type=search], .field select {
+      width: 100%; padding: 0.4rem 0.55rem; border-radius: 6px;
+      border: 1px solid var(--panel-border); background: var(--bg); color: var(--fg); font: inherit; font-size: 0.8rem;
+    }
+    .switch { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.55rem; }
+    .switch label { color: var(--muted); }
+    .switch input { accent-color: var(--link); width: 16px; height: 16px; cursor: pointer; }
+
+    #legend { position: fixed; right: 12px; bottom: 12px; z-index: 40; padding: 0.6rem 0.75rem; border-radius: 8px; background: var(--panel-bg); border: 1px solid var(--panel-border); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); font-size: 0.78rem; color: var(--muted); transition: right 0.2s ease; }
+    /* Slide the legend left so the settings panel does not cover it. */
+    body.settings-open #legend { right: calc(min(290px, 86vw) + 12px); }
+    #legend .row { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.25rem; }
+    #legend .swatch { width: 13px; height: 13px; border-radius: 50%; flex: none; border: 1px solid var(--node-stroke); }
+    #legend .swatch.ring { box-shadow: 0 0 0 2px #e93147; }
+    #legend .gradient { width: 54px; height: 11px; border-radius: 3px; flex: none; border: 1px solid var(--node-stroke); }
+    #legend .line { width: 20px; height: 0; border-top: 2px solid var(--muted); flex: none; }
+    #legend .line.dash { border-top-style: dashed; }
+
+    .insight { margin-top: 0.8rem; }
+    .insight:first-child { margin-top: 0; }
+    .insight h3 { margin: 0 0 0.15rem; font-size: 0.85rem; font-weight: 600; }
+    .insight h3 .badge { color: var(--muted); font-weight: 400; }
+    .insight .hint { color: var(--muted); margin-bottom: 0.2rem; }
+    .insight ul { list-style: none; margin: 0.1rem 0 0; padding: 0; }
+    .insight li { margin: 0.1rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .insight a.note { color: var(--link); text-decoration: none; }
+    .insight a.note:hover { text-decoration: underline; }
+    .insight li.more { color: var(--muted); }
+    .metrics { margin-top: 0.2rem; border: 1px solid var(--panel-border); border-radius: 6px; padding: 0.5rem 0.65rem; }
+    .metric-row { display: flex; justify-content: space-between; gap: 1rem; padding: 2px 0; }
+    .metric-row .val { font-weight: 600; }
+    .insight li .count { color: var(--muted); font-weight: 400; }
+
+    #tooltip { position: fixed; pointer-events: none; opacity: 0; transition: opacity 0.1s ease; z-index: 70; padding: 0.5rem 0.65rem; border-radius: 8px; background: var(--panel-bg); border: 1px solid var(--panel-border); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); font-size: 0.8rem; max-width: 260px; }
+    #tooltip .t-title { font-weight: 600; margin-bottom: 0.2rem; }
+    #tooltip .t-metric { color: var(--muted); }
+
+    .node { cursor: pointer; stroke: none; transition: opacity 0.15s ease; }
+    .label { fill: var(--label); font-size: 10px; pointer-events: none; user-select: none; transition: opacity 0.15s ease; }
+    line.edge { stroke: var(--edge); transition: opacity 0.15s ease; }
+    /* Hovered node's links coloured by direction (theme-aware for contrast). */
+    line.edge.hl-out  { stroke: var(--hl-out); }  /* outgoing: this note links out */
+    line.edge.hl-in   { stroke: var(--hl-in); }   /* incoming: links point here */
+    line.edge.hl-both { stroke: var(--hl-both); } /* both directions */
+    /* Bridges are only emphasised (red, dashed) while the "Connects different
+       areas" highlight is active; otherwise they render as normal edges. */
+    body.show-bridges line.edge.bridge { stroke: #e93147; stroke-dasharray: 4 3; }
+    /* Arrowheads take the colour of their own link (incl. hover direction
+       colours). Falls back to the edge colour where context-stroke is
+       unsupported. */
+    #arrow path { fill: var(--edge); fill: context-stroke; }
+  </style>
+</head>
+<body class="sidebar-open">
+  <svg id="graph"></svg>
+
+  <button id="sidebar-toggle" class="icon-btn" type="button" aria-label="Toggle info panel" title="Info">
+    <svg class="ic ic-menu" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    <svg class="ic ic-collapse" viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <a id="back-btn" class="icon-btn" href="./" aria-label="Close graph, back to vault" title="Close graph — back to vault">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><line x1="6" y1="6" x2="18" y2="18"/><line x1="6" y1="18" x2="18" y2="6"/></svg>
+  </a>
+  <button id="settings-toggle" class="icon-btn" type="button" aria-label="Toggle settings" title="Settings">
+    <svg class="ic ic-menu" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    <svg class="ic ic-collapse" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+
+  <aside class="side left" id="sidebar">
+    <div class="side-head"><h1>Vault Graph</h1></div>
+    <div class="side-body">
+      <div class="sb-block">
+        <div class="sb-title">Highlight</div>
+        <div class="chips" id="metric-chips">
+          <div class="chip" role="button" tabindex="0" data-metric="degree">Most links</div>
+          <div class="chip" role="button" tabindex="0" data-metric="betweenness">Connects different areas</div>
+          <div class="chip" role="button" tabindex="0" data-metric="closeness">Easiest to reach</div>
+          <div class="chip" role="button" tabindex="0" data-metric="eigenvector">Most influential</div>
+          <div class="chip" role="button" tabindex="0" data-metric="folder">By folder</div>
+        </div>
+      </div>
+      <div class="sb-block">
+        <div class="sb-title">Insights</div>
+        <div id="insights-body"></div>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="side right collapsed" id="settings">
+    <div class="side-head"><h1>Settings</h1></div>
+    <div class="side-body">
+      <div class="sb-block">
+        <div class="sb-title">Filters</div>
+        <div class="field"><label for="f-search">Search notes</label><input type="search" id="f-search" placeholder="Filter by name..."></div>
+        <div class="switch"><label for="f-orphans">Show orphans</label><input type="checkbox" id="f-orphans" checked></div>
+      </div>
+      <div class="sb-block">
+        <div class="sb-title">Display</div>
+        <div class="switch"><label for="d-arrows">Arrows (always)</label><input type="checkbox" id="d-arrows"></div>
+        <div class="switch"><label for="d-arrows-hover">Arrows on hover</label><input type="checkbox" id="d-arrows-hover" checked></div>
+        <div class="switch"><label for="d-colors-hover">Colour links on hover</label><input type="checkbox" id="d-colors-hover" checked></div>
+        <div class="field"><label for="d-scheme">Colour scheme</label>
+          <select id="d-scheme">
+            <option value="inferno" selected>Inferno (heatmap)</option>
+            <option value="magma">Magma</option>
+            <option value="plasma">Plasma</option>
+            <option value="viridis">Viridis</option>
+            <option value="cividis">Cividis</option>
+            <option value="turbo">Turbo (rainbow)</option>
+            <option value="warm">Warm</option>
+            <option value="cool">Cool</option>
+          </select>
+        </div>
+        <div class="field"><label for="d-textfade">Text fade threshold</label><input type="range" id="d-textfade" min="0" max="2" step="0.05" value="0.5"></div>
+        <div class="field"><label for="d-nodesize">Node size</label><input type="range" id="d-nodesize" min="0.5" max="2.5" step="0.1" value="1"></div>
+        <div class="field"><label for="d-linkwidth">Link thickness</label><input type="range" id="d-linkwidth" min="0.5" max="4" step="0.1" value="1"></div>
+      </div>
+      <div class="sb-block">
+        <div class="sb-title">Forces</div>
+        <div class="field"><label for="fo-center">Center force</label><input type="range" id="fo-center" min="0" max="0.3" step="0.01" value="0.05"></div>
+        <div class="field"><label for="fo-repel">Repel force</label><input type="range" id="fo-repel" min="50" max="800" step="10" value="220"></div>
+        <div class="field"><label for="fo-link">Link force</label><input type="range" id="fo-link" min="0" max="1" step="0.05" value="0.6"></div>
+        <div class="field"><label for="fo-distance">Link distance</label><input type="range" id="fo-distance" min="20" max="200" step="5" value="70"></div>
+      </div>
+    </div>
+  </aside>
+
+  <div id="legend">
+    <div><strong>Legend</strong></div>
+    <div class="row" id="legend-spectrum"><span class="gradient"></span> Lower &ndash; Higher</div>
+    <div id="legend-folders" style="display:none"></div>
+    <div class="row" id="legend-bridges" style="display:none"><span class="line dash" style="border-top-color:#e93147"></span> Only link between two groups</div>
+    <div class="row" style="margin-top:0.4rem"><span class="line" style="border-top-color:var(--hl-out)"></span> Outgoing (on hover)</div>
+    <div class="row"><span class="line" style="border-top-color:var(--hl-in)"></span> Incoming (on hover)</div>
+    <div class="row"><span class="line" style="border-top-color:var(--hl-both)"></span> Both directions (on hover)</div>
+  </div>
+
+  <div id="tooltip"></div>
+
+  <script src="js/vendor/d3.min.js"></script>
+  <script>
+    const svg = d3.select('#graph');
+    const tooltip = d3.select('#tooltip');
+    // Selectable colour schemes (sequential; Inferno = heatmap by default).
+    var schemes = {
+      inferno: d3.interpolateInferno, magma: d3.interpolateMagma, plasma: d3.interpolatePlasma,
+      viridis: d3.interpolateViridis, cividis: d3.interpolateCividis, turbo: d3.interpolateTurbo,
+      warm: d3.interpolateWarm, cool: d3.interpolateCool,
+    };
+    var spectrum = schemes.inferno;
+    const folderColor = d3.scaleOrdinal((d3.schemeTableau10 || []).concat(d3.schemeSet3 || [], d3.schemeSet2 || []));
+    function colorAt(t) { return spectrum(0.1 + 0.8 * t); }
+
+    function byId(id) { return document.getElementById(id); }
+    byId('sidebar-toggle').addEventListener('click', function () {
+      var open = !byId('sidebar').classList.toggle('collapsed');
+      document.body.classList.toggle('sidebar-open', open);
+    });
+    byId('settings-toggle').addEventListener('click', function () {
+      var open = !byId('settings').classList.toggle('collapsed');
+      document.body.classList.toggle('settings-open', open);
+    });
+
+    function bridgeKey(s, t) { return s < t ? s + ' ' + t : t + ' ' + s; }
+    function metricValue(n, m) { return n[m] || 0; }
+    function edgeEnd(v) { return typeof v === 'object' ? v.id : v; }
+    function topFolder(id) { var i = id.indexOf('/'); return i === -1 ? '(root)' : id.slice(0, i); }
+    function escapeHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function noteLink(n) { return '<a class="note" href="' + encodeURI(n.id) + '" title="' + escapeHtml(n.id) + '">' + escapeHtml(n.title) + '</a>'; }
+    function metricRow(l, v) { return '<div class="metric-row"><span>' + l + '</span><span class="val">' + v + '</span></div>'; }
+
+    function section(title, count, hint, notes, limit, valueFn) {
+      var html = '<div class="insight"><h3>' + title;
+      if (count !== null) html += ' <span class="badge">' + count + '</span>';
+      html += '</h3>';
+      if (hint) html += '<div class="hint">' + hint + '</div>';
+      if (notes && notes.length) {
+        html += '<ul>' + notes.slice(0, limit).map(function (n) {
+          var val = valueFn ? ' <span class="count">' + valueFn(n) + '</span>' : '';
+          return '<li>' + noteLink(n) + val + '</li>';
+        }).join('');
+        if (notes.length > limit) html += '<li class="more">+' + (notes.length - limit) + ' more</li>';
+        html += '</ul>';
+      }
+      return html + '</div>';
+    }
+
+    function buildInsights(data) {
+      var nodes = data.nodes, links = data.links;
+      var crossing = 0;
+      links.forEach(function (l) { if (topFolder(edgeEnd(l.source)) !== topFolder(edgeEnd(l.target))) crossing++; });
+      var crossPct = links.length ? Math.round(crossing / links.length * 100) : 0;
+      var avgDeg = nodes.length ? nodes.reduce(function (a, n) { return a + n.degree; }, 0) / nodes.length : 0;
+
+      var orphans = nodes.filter(function (n) { return n.degree === 0; });
+      var spofs = nodes.filter(function (n) { return n.is_articulation_point; }).sort(function (a, b) { return b.degree - a.degree; });
+      var hubs = nodes.filter(function (n) { return n.degree > 0; }).sort(function (a, b) { return b.degree - a.degree; });
+      var bridges = nodes.filter(function (n) { return n.betweenness > 0; }).sort(function (a, b) { return b.betweenness - a.betweenness; });
+      var connectors = spofs.length ? spofs : bridges;
+
+      var html = '';
+      html += '<div class="insight metrics">' +
+        metricRow('Notes', nodes.length) +
+        metricRow('Links', links.length) +
+        metricRow('Avg links per note', avgDeg.toFixed(1)) +
+        metricRow('Orphans', orphans.length) +
+        metricRow('Separate groups', data.stats.connected_components) +
+        metricRow('Cross-topic links', crossPct + '%') +
+        '</div>';
+      html += section('Orphans', orphans.length, 'Notes with no links', orphans, 8);
+      html += section('Most-linked notes', null, null, hubs, 8, function (n) { return n.degree; });
+      html += section('Connectors', connectors.length, 'Hold groups together', connectors, 8);
+      byId('insights-body').innerHTML = html;
+    }
+
+    var state = { metric: 'degree', nodes: [], links: [], bridges: null, sim: null, node: null, label: null, link: null, max: {}, zoomK: 1, hovered: null };
+    var settings = { search: '', showOrphans: true, arrows: false, arrowsOnHover: true, colorsOnHover: true, textFade: 0.5, nodeSize: 1, linkWidth: 1, center: 0.05, repel: 220, link: 0.6, distance: 70 };
+
+    d3.json('graph-data.json').then(function (data) {
+      buildInsights(data);
+      draw(data);
+      wireControls();
+    }).catch(function (err) {
+      byId('insights-body').textContent = 'Could not load graph data.';
+      console.error(err);
+    });
+
+    function radius(d) {
+      var max = state.max.degree || 1;
+      var norm = max ? d.degree / max : 0;
+      return settings.nodeSize * 5 * (0.9 + 1.1 * Math.sqrt(norm));
+    }
+
+    function draw(data) {
+      var width = window.innerWidth, height = window.innerHeight;
+      state.bridges = new Set((data.bridges || []).map(function (b) { return bridgeKey(b.source, b.target); }));
+      state.nodes = data.nodes.map(function (n) { return Object.assign({}, n); });
+      state.links = data.links.map(function (l) { return Object.assign({}, l); });
+
+      // Neighbour sets for hover focus (undirected: either link direction) and
+      // a directed edge set to tell outgoing / incoming / bidirectional apart.
+      state.neighbors = {};
+      state.edgeSet = new Set();
+      state.nodes.forEach(function (n) { state.neighbors[n.id] = new Set(); });
+      data.links.forEach(function (l) {
+        state.neighbors[l.source].add(l.target);
+        state.neighbors[l.target].add(l.source);
+        state.edgeSet.add(l.source + '\t' + l.target);
+      });
+      ['degree', 'betweenness', 'closeness', 'eigenvector'].forEach(function (m) {
+        state.max[m] = d3.max(state.nodes, function (n) { return metricValue(n, m); }) || 1;
+      });
+
+      // Start every node near the centre so the graph expands outward from the
+      // middle instead of flying in from the top-left corner (d3's default).
+      var cx = width / 2, cy = height / 2;
+      state.nodes.forEach(function (n) {
+        n.x = cx + (Math.random() - 0.5) * 80;
+        n.y = cy + (Math.random() - 0.5) * 80;
+      });
+
+      var g = svg.append('g');
+      // markerUnits defaults to strokeWidth, so the arrowhead scales with the
+      // line and reads as part of it rather than a shape pasted on top.
+      svg.append('defs').append('marker')
+        .attr('id', 'arrow').attr('viewBox', '0 0 10 10').attr('refX', 9.5).attr('refY', 5)
+        .attr('markerWidth', 5).attr('markerHeight', 5).attr('orient', 'auto')
+        .append('path').attr('d', 'M0,0 L10,5 L0,10 z');
+
+      svg.call(d3.zoom().scaleExtent([0.1, 6]).on('zoom', function (event) {
+        g.attr('transform', event.transform); state.zoomK = event.transform.k;
+        applyNodeFloor(); applyTextFade();
+      }));
+
+      var sim = d3.forceSimulation(state.nodes)
+        // Settle slowly (default alphaDecay ~0.0228) so the graph eases into
+        // place instead of snapping. velocityDecay adds a little glide.
+        .alphaDecay(0.008)
+        .velocityDecay(0.32)
+        .force('link', d3.forceLink(state.links).id(function (d) { return d.id; }).distance(settings.distance).strength(settings.link))
+        .force('charge', d3.forceManyBody().strength(-settings.repel))
+        .force('x', d3.forceX(width / 2).strength(settings.center))
+        .force('y', d3.forceY(height / 2).strength(settings.center))
+        .force('collide', d3.forceCollide().radius(function (d) { return radius(d) + 3; }));
+      state.sim = sim;
+
+      state.link = g.append('g').selectAll('line').data(state.links).join('line')
+        .attr('class', function (d) { return state.bridges.has(bridgeKey(edgeEnd(d.source), edgeEnd(d.target))) ? 'edge bridge' : 'edge'; });
+
+      state.node = g.append('g').selectAll('circle').data(state.nodes).join('circle')
+        .attr('class', 'node')
+        .on('mouseover', function (event, d) { showTooltip(event, d); focusNode(d); })
+        .on('mousemove', moveTooltip)
+        .on('mouseout', function () { hideTooltip(); unfocus(); })
+        .on('click', function (event, d) { window.location.href = encodeURI(d.id); })
+        .call(drag(sim));
+
+      state.label = g.append('g').selectAll('text').data(state.nodes).join('text')
+        .attr('class', 'label').attr('dy', 3).text(function (d) { return d.title; });
+
+      applyHighlight(); applyDisplay(); applyFilter();
+
+      sim.on('tick', function () {
+        positionLinks();
+        state.node.attr('cx', function (d) { return d.x; }).attr('cy', function (d) { return d.y; });
+        state.label.attr('x', function (d) { return d.x; }).attr('y', function (d) { return d.y; });
+      });
+
+      window.addEventListener('resize', function () {
+        sim.force('x', d3.forceX(window.innerWidth / 2).strength(settings.center))
+           .force('y', d3.forceY(window.innerHeight / 2).strength(settings.center));
+        sim.alpha(0.3).restart();
+      });
+    }
+
+    function applyHighlight() {
+      var m = state.metric;
+      var legSpectrum = byId('legend-spectrum'), legFolders = byId('legend-folders');
+
+      // Bridges (single links between groups) are only relevant to the
+      // "Connects different areas" view; show + highlight them red only there.
+      var showBridges = (m === 'betweenness');
+      document.body.classList.toggle('show-bridges', showBridges);
+      byId('legend-bridges').style.display = showBridges ? 'flex' : 'none';
+
+      if (m === 'folder') {
+        state.node.attr('fill', function (d) { return folderColor(topFolder(d.id)); });
+        var folders = Array.from(new Set(state.nodes.map(function (n) { return topFolder(n.id); }))).sort();
+        legFolders.innerHTML = folders.map(function (f) {
+          return '<div class="row"><span class="swatch" style="background:' + folderColor(f) + '"></span> ' + escapeHtml(f) + '</div>';
+        }).join('');
+        legFolders.style.display = 'block';
+        legSpectrum.style.display = 'none';
+        return;
+      }
+      var max = state.max[m] || 1;
+      // pow(<1) spreads the common low values across more of the scale.
+      state.node.attr('fill', function (d) { return colorAt(Math.pow(metricValue(d, m) / max, 0.6)); });
+      legSpectrum.style.display = 'flex';
+      legFolders.style.display = 'none';
+    }
+
+    function initLegendGradient() {
+      var el = document.querySelector('#legend .gradient');
+      if (!el) return;
+      var stops = [0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9, 1].map(function (t) { return colorAt(t); });
+      el.style.background = 'linear-gradient(to right,' + stops.join(',') + ')';
+    }
+
+    // A link shows an arrowhead when arrows are on globally, or (on hover) when
+    // it connects to the hovered node and hover arrows are enabled.
+    function linkHasArrow(l) {
+      if (settings.arrows) return true;
+      if (state.hovered && settings.arrowsOnHover) {
+        return edgeEnd(l.source) === state.hovered || edgeEnd(l.target) === state.hovered;
+      }
+      return false;
+    }
+
+    function updateArrows() {
+      if (!state.link) return;
+      state.link.attr('marker-end', function (l) { return linkHasArrow(l) ? 'url(#arrow)' : null; });
+    }
+
+    // Position each link. When it carries an arrow, end it exactly at the
+    // target node's edge so the arrowhead sits flush against the circle;
+    // otherwise run the line to the node centre.
+    function positionLinks() {
+      if (!state.link) return;
+      state.links.forEach(function (d) {
+        if (typeof d.source !== 'object') return;
+        var dx = d.target.x - d.source.x, dy = d.target.y - d.source.y;
+        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+        var pad = linkHasArrow(d) ? radius(d.target) : 0;
+        d.__ex = d.target.x - dx / dist * pad;
+        d.__ey = d.target.y - dy / dist * pad;
+      });
+      state.link.attr('x1', function (d) { return d.source.x; }).attr('y1', function (d) { return d.source.y; })
+        .attr('x2', function (d) { return d.__ex; }).attr('y2', function (d) { return d.__ey; });
+    }
+
+    // Nodes scale with zoom as usual, but never shrink below a small on-screen
+    // floor, so isolated notes (orphans) stay visible instead of fading to a
+    // sub-pixel dot when zoomed out. Above the floor this is a no-op, so normal
+    // zoom sizing is unchanged.
+    function applyNodeFloor() {
+      if (!state.node) return;
+      var k = state.zoomK || 1, floor = 3;
+      state.node.attr('r', function (d) { var base = radius(d); return Math.max(base * k, floor) / k; });
+    }
+
+    function applyDisplay() {
+      applyNodeFloor();
+      state.label.attr('dx', function (d) { return radius(d) + 3; });
+      state.link.attr('stroke-width', settings.linkWidth);
+      updateArrows();
+      positionLinks();
+      state.sim.force('collide', d3.forceCollide().radius(function (d) { return radius(d) + 3; }));
+      applyTextFade();
+    }
+
+    function applyTextFade() {
+      var op = state.zoomK <= settings.textFade ? 0 : Math.min(1, (state.zoomK - settings.textFade) / 0.5);
+      state.label.style('opacity', op);
+    }
+
+    function applyFilter() {
+      var term = settings.search.trim().toLowerCase();
+      var vis = {};
+      state.nodes.forEach(function (n) {
+        var ok = true;
+        if (!settings.showOrphans && n.degree === 0) ok = false;
+        if (term && n.title.toLowerCase().indexOf(term) === -1 && n.id.toLowerCase().indexOf(term) === -1) ok = false;
+        vis[n.id] = ok;
+      });
+      state.node.style('display', function (d) { return vis[d.id] ? null : 'none'; });
+      state.label.style('display', function (d) { return vis[d.id] ? null : 'none'; });
+      state.link.style('display', function (d) { return vis[edgeEnd(d.source)] && vis[edgeEnd(d.target)] ? null : 'none'; });
+    }
+
+    function wireControls() {
+      initLegendGradient();
+
+      // On phones the side panel would cover the graph; start it collapsed.
+      if (window.innerWidth < 768) {
+        byId('sidebar').classList.add('collapsed');
+        document.body.classList.remove('sidebar-open');
+      }
+
+      var chips = Array.prototype.slice.call(document.querySelectorAll('#metric-chips .chip'));
+      function selectChip(chip) {
+        chips.forEach(function (c) { c.classList.remove('active'); });
+        chip.classList.add('active');
+        state.metric = chip.dataset.metric;
+        applyHighlight();
+      }
+      chips.forEach(function (chip) {
+        chip.addEventListener('click', function () { selectChip(chip); });
+        chip.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectChip(chip); } });
+      });
+      selectChip(chips[0]);
+
+      byId('f-search').addEventListener('input', function () { settings.search = this.value; applyFilter(); });
+      byId('f-orphans').addEventListener('change', function () { settings.showOrphans = this.checked; applyFilter(); });
+
+      byId('d-arrows').addEventListener('change', function () { settings.arrows = this.checked; applyDisplay(); });
+      byId('d-arrows-hover').addEventListener('change', function () { settings.arrowsOnHover = this.checked; });
+      byId('d-colors-hover').addEventListener('change', function () { settings.colorsOnHover = this.checked; });
+      byId('d-scheme').addEventListener('change', function () { spectrum = schemes[this.value] || schemes.inferno; initLegendGradient(); applyHighlight(); });
+      byId('d-textfade').addEventListener('input', function () { settings.textFade = +this.value; applyTextFade(); });
+      byId('d-nodesize').addEventListener('input', function () { settings.nodeSize = +this.value; applyDisplay(); state.sim.alpha(0.15).restart(); });
+      byId('d-linkwidth').addEventListener('input', function () { settings.linkWidth = +this.value; applyDisplay(); });
+
+      byId('fo-center').addEventListener('input', function () {
+        settings.center = +this.value;
+        state.sim.force('x', d3.forceX(window.innerWidth / 2).strength(settings.center))
+                 .force('y', d3.forceY(window.innerHeight / 2).strength(settings.center)).alpha(0.3).restart();
+      });
+      byId('fo-repel').addEventListener('input', function () {
+        settings.repel = +this.value;
+        state.sim.force('charge', d3.forceManyBody().strength(-settings.repel)).alpha(0.3).restart();
+      });
+      byId('fo-link').addEventListener('input', function () {
+        settings.link = +this.value;
+        state.sim.force('link').strength(settings.link); state.sim.alpha(0.3).restart();
+      });
+      byId('fo-distance').addEventListener('input', function () {
+        settings.distance = +this.value;
+        state.sim.force('link').distance(settings.distance); state.sim.alpha(0.3).restart();
+      });
+    }
+
+    // Hover focus: keep the hovered node, its neighbours and their links fully
+    // visible; fade everything else into the background.
+    // Direction of a link relative to the hovered node: 'out', 'in', 'both'
+    // (a reverse link also exists), or null when not connected.
+    function linkDir(l, id) {
+      var s = edgeEnd(l.source), t = edgeEnd(l.target);
+      var outgoing = s === id, incoming = t === id;
+      if (!outgoing && !incoming) return null;
+      var other = outgoing ? t : s;
+      if (state.edgeSet.has(id + '\t' + other) && state.edgeSet.has(other + '\t' + id)) return 'both';
+      return outgoing ? 'out' : 'in';
+    }
+
+    function focusNode(d) {
+      state.hovered = d.id;
+      var nb = state.neighbors[d.id] || new Set();
+      var color = settings.colorsOnHover;
+      state.node.style('opacity', function (n) { return n.id === d.id || nb.has(n.id) ? 1 : 0.3; });
+      state.link
+        .classed('hl', function (l) { return !!linkDir(l, d.id); })
+        .classed('hl-out', function (l) { return color && linkDir(l, d.id) === 'out'; })
+        .classed('hl-in', function (l) { return color && linkDir(l, d.id) === 'in'; })
+        .classed('hl-both', function (l) { return color && linkDir(l, d.id) === 'both'; })
+        .style('opacity', function (l) { return linkDir(l, d.id) ? 1 : 0.2; });
+      state.label.style('opacity', function (n) { return n.id === d.id || nb.has(n.id) ? 1 : 0.15; });
+      updateArrows();
+      positionLinks();
+    }
+    function unfocus() {
+      state.hovered = null;
+      state.node.style('opacity', 1);
+      state.link.classed('hl', false).classed('hl-out', false).classed('hl-in', false).classed('hl-both', false).style('opacity', 1);
+      updateArrows();
+      positionLinks();
+      applyTextFade();
+    }
+
+    function showTooltip(event, d) {
+      tooltip.html(
+        '<div class="t-title">' + escapeHtml(d.title) + '</div>' +
+        '<div class="t-metric">' + d.degree + ' link' + (d.degree === 1 ? '' : 's') + '</div>'
+      ).style('opacity', 1);
+      moveTooltip(event);
+    }
+    function moveTooltip(event) { tooltip.style('left', (event.clientX + 14) + 'px').style('top', (event.clientY + 14) + 'px'); }
+    function hideTooltip() { tooltip.style('opacity', 0); }
+
+    function drag(sim) {
+      return d3.drag()
+        .on('start', function (event, d) { if (!event.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+        .on('drag', function (event, d) { d.fx = event.x; d.fy = event.y; })
+        .on('end', function (event, d) { if (!event.active) sim.alphaTarget(0); d.fx = null; d.fy = null; });
+    }
+  </script>
+</body>
+</html>

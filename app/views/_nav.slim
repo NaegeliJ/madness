@@ -7,6 +7,10 @@ nav
       a.icon href="#{config.base_uri}/_search" accesskey='s' title="Search"
         == slim :_icon, locals: { name: :search }
 
+    - if config.graph
+      a.icon href="#{config.base_uri}/graph" accesskey='g' title="Graph"
+        == slim :_icon, locals: { name: :graph }
+
     .icon-spacer
 
     a.icon.theme-toggle href="#" role="button" aria-label="Toggle dark mode" title="Toggle theme"
