@@ -20,8 +20,18 @@ module Madness
         # the browser's HTML parser. Mermaid reads .textContent, which gives
         # back the decoded source.
         "<div class='mermaid'>#{CGI.escapeHTML(code)}</div>"
+      elsif language
+        # Use Rouge for syntax highlighting with language
+        lexer = Rouge::Lexer.find(language)
+        if lexer
+          highlighted = lexer.lex(code)
+          formatter = Rouge::Formatters::HTML.new
+          "<pre><code class=\"language-#{language}\">#{formatter.format(highlighted)}</code></pre>"
+        else
+          "<pre><code>#{CGI.escapeHTML(code)}</code></pre>"
+        end
       else
-        super
+        "<pre><code>#{CGI.escapeHTML(code)}</code></pre>"
       end
     end
 
