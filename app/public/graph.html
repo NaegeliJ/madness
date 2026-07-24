@@ -194,13 +194,13 @@
         <div class="switch"><label for="d-colors-hover">Colour links on hover</label><input type="checkbox" id="d-colors-hover" checked></div>
         <div class="field"><label for="d-scheme">Colour scheme</label>
           <select id="d-scheme">
-            <option value="inferno" selected>Inferno (heatmap)</option>
+            <option value="warm" selected>Warm</option>
+            <option value="inferno">Inferno (heatmap)</option>
             <option value="magma">Magma</option>
             <option value="plasma">Plasma</option>
             <option value="viridis">Viridis</option>
             <option value="cividis">Cividis</option>
             <option value="turbo">Turbo (rainbow)</option>
-            <option value="warm">Warm</option>
             <option value="cool">Cool</option>
           </select>
         </div>
@@ -240,7 +240,7 @@
       viridis: d3.interpolateViridis, cividis: d3.interpolateCividis, turbo: d3.interpolateTurbo,
       warm: d3.interpolateWarm, cool: d3.interpolateCool,
     };
-    var spectrum = schemes.inferno;
+    var spectrum = schemes.warm;
     const folderColor = d3.scaleOrdinal((d3.schemeTableau10 || []).concat(d3.schemeSet3 || [], d3.schemeSet2 || []));
     function colorAt(t) { return spectrum(0.1 + 0.8 * t); }
 

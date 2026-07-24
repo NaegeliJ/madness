@@ -38,6 +38,8 @@ summary.callout-title {
 .callout-content > :first-child { margin-top: 0; }
 .callout-content > :last-child  { margin-bottom: 0; }
 
+.main img { display: block; margin-bottom: 4px; }
+
 /* Colored disc marker before the title, tinted per callout type. */
 .callout-title::before {
   content: '';
